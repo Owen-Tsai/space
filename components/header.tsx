@@ -6,8 +6,9 @@ import styles from '@css/header.module.css'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import ThemeSwitch from './theme-switch'
+import type { Props } from '@tds/header'
 
-export default function Header() {
+export default function Header(props: Props) {
   const [mounted, setMounted] = useState(false)
   const { theme } = useTheme()
 
@@ -38,9 +39,9 @@ export default function Header() {
       <div className={styles.toolbar}>
         <div className='flex items-center justify-between px-6'>
           <div className='text-slate-500'>
-            Recent Post: Hello World
+            {props.children}
           </div>
-          <ThemeSwitch cls='bg-transparent dark:bg-transparent' />
+          <ThemeSwitch cls='!bg-transparent !dark:bg-transparent' />
         </div>
       </div>
     </header>

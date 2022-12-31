@@ -1,0 +1,12 @@
+.page {
+  padding-left: 142px;
+}
+
+.main {
+  @apply border-l-2 px-6 border-slate-800 dark:border-slate-100;
+}
+
+.main > h1 {
+  padding: 10vh 0;
+  @apply text-7xl text-slate-800 dark:text-slate-100;
+}

@@ -1,10 +1,22 @@
-import Header from '@comps/header'
+import Layout from '@layouts/default-layout'
+import { Abril_Fatface } from '@next/font/google'
+import styles from '@css/blog.module.css'
+
+const font = Abril_Fatface({
+  weight: '400',
+  subsets: ['latin']
+})
 
 export default function Blog() {
   return (
     <>
-      <Header />
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid accusamus voluptatibus facilis consectetur sint dolore iure facere sapiente nisi consequuntur nobis, illum eos quidem eius tempore ipsum. Voluptas, a quos.</p>
+      <Layout>
+        <div className={styles.page}>
+          <main className={styles.main}>
+            <h1 style={font.style}>BLOGS</h1>
+          </main>
+        </div>
+      </Layout>
     </>
   )
 }
