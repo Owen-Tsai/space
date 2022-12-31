@@ -14,9 +14,8 @@ const nextConfig = {
           // Only focus on loaders that are an object and have a `loader` property set to `css-loader`
           if(typeof l !== 'string' && typeof l.loader === 'string' && /(?<!post)css-loader/.test(l.loader)) {
             // If there are no module options originally set, skip this loader
-            if(!l.options.modules) return;
+            if(!l.options.modules || l.options.isFontLoader) return;
             const { getLocalIdent, ...others } = l.options.modules;
-            const { isFontLoader } = l.options;
 
             // Create a new options object with the `getLocalIdent` property set to a function
             l.options = {
@@ -24,9 +23,6 @@ const nextConfig = {
               modules: {
                 ...others,
                 getLocalIdent: (ctx, localIdentName, localName, ...rest) => {
-                  if (isFontLoader) {
-                    return getLocalIdent(ctx, localIdentName, localName, ...rest);
-                  }
                   // If the class name is `dark`, return it instead of hashing it
                   if(localName === 'dark') return localName;
                   // Otherwise, call the original function and return the value
