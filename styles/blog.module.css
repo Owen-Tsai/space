@@ -1,12 +1,30 @@
 .page {
   padding-left: 142px;
+  @apply flex relative;
 }
 
 .main {
-  @apply border-l-2 px-6 border-slate-800 dark:border-slate-100;
+  @apply border-l-2 px-6 border-slate-800 dark:border-slate-100 flex-grow;
 }
 
 .main > h1 {
   padding: 10vh 0;
   @apply text-7xl text-slate-800 dark:text-slate-100;
+}
+
+.aside {
+  @apply w-1/3 border-l-2 border-slate-800 dark:border-slate-100 fixed right-0 bottom-0 top-[104px];
+}
+
+.gallery {
+  @apply px-6;
+  height: calc(100vh - 104px);
+}
+
+.gallery > h1 {
+  padding: 10vh 0;
+  @apply text-7xl text-slate-800 dark:text-slate-100;
+}
+
+.list {
 }

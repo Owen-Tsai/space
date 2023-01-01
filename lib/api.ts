@@ -1,20 +1,20 @@
-import fs from 'fs-extra'
+import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 import type { Blog, BlogListItem } from '@tds/blog'
 
 const postDir = join(process.cwd(), '_data/blogs')
 
-export const getPostSlugs = async () => {
-  return fs.readdir(postDir)
+export const getPostSlugs = () => {
+  return fs.readdirSync(postDir)
 }
 
-export const getPostBySlug = async (
+export const getPostBySlug = (
   slug: string, short = true
-): Promise<Blog | BlogListItem> => {
+): Blog | BlogListItem => {
   const realSlug = slug.replace(/\.mdx$/, '')
-  const fullPath = join(process.cwd(), `${realSlug}.mdx`)
-  const fileContent = await fs.readFile(fullPath, 'utf-8')
+  const fullPath = join(postDir, `${realSlug}.mdx`)
+  const fileContent = fs.readFileSync(fullPath, 'utf-8')
   const { data, content } = matter(fileContent)
 
   if (!data['title'] || !data['date']) {
@@ -33,5 +33,12 @@ export const getPostBySlug = async (
 }
 
 export const getAllPosts = () => {
+  const slugs = getPostSlugs()
+  const res: BlogListItem[] = []
+  slugs.forEach((slug) => {
+    res.push(getPostBySlug(slug, true))
+  })
 
+  return res
 }
+
