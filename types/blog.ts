@@ -12,7 +12,7 @@ export type BlogListItem = {
 }
 
 export type GalleryItem = {
-  id: number | string
+  title: string
   desc: string
   src: StaticImageData | string
 }

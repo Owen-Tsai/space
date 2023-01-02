@@ -1,10 +1,10 @@
 .page {
   padding-left: 142px;
-  @apply flex relative;
+  @apply relative flex;
 }
 
 .main {
-  @apply border-l-2 px-6 border-slate-800 dark:border-slate-100 flex-grow;
+  @apply border-l-2 px-6 border-slate-800 dark:border-slate-100 w-2/3;
 }
 
 .main > h1 {
@@ -13,17 +13,30 @@
 }
 
 .aside {
-  @apply w-1/3 border-l-2 border-slate-800 dark:border-slate-100 fixed right-0 bottom-0 top-[104px];
+  height: calc(100vh - var(--header-height));
+  top: var(--header-height);
+  @apply w-1/3 border-l-2 border-slate-800 dark:border-slate-100 sticky right-0 overflow-hidden;
 }
 
 .gallery {
   @apply px-6;
-  height: calc(100vh - 104px);
 }
 
 .gallery > h1 {
   padding: 10vh 0;
   @apply text-7xl text-slate-800 dark:text-slate-100;
+}
+
+.gallery-actions {
+  @apply text-right;
+}
+
+.gallery-actions > button {
+  @apply inline-flex items-center justify-center text-slate-800 dark:text-slate-200 p-1;
+}
+
+.gallery-actions svg {
+  stroke-width: 1.5;
 }
 
 .list {

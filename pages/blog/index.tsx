@@ -1,13 +1,17 @@
 import Layout from '@layouts/default-layout'
 import { Abril_Fatface } from '@next/font/google'
-import styles from '@css/blog.module.css'
-import { getAllPosts } from '@lib/api'
-import galleryImages from '../../_data/gallery/index'
+import { getAllPosts, getAllGalleryImages } from '@lib/api'
 import BlogCard from '@comps/blog-card'
 import GalleryItem from '@comps/gallery-item'
-import type { BlogListItem } from '@tds/blog'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation } from 'swiper'
+import { ArrowLeft, ArrowRight } from 'react-feather'
+
+import type { BlogListItem, GalleryItem as GalleryListItem } from '@tds/blog'
+
+import styles from '@css/blog.module.css'
 import 'swiper/css'
+import 'swiper/css/navigation'
 
 const font = Abril_Fatface({
   weight: '400',
@@ -15,32 +19,35 @@ const font = Abril_Fatface({
 })
 
 type Props = {
-  posts: BlogListItem[]
+  posts: BlogListItem[],
+  images: GalleryListItem[]
 }
 
 export const getStaticProps = async () => {
   const posts = getAllPosts()
+  const images = getAllGalleryImages()
 
   return {
     props: {
-      posts
+      posts,
+      images
     }
   }
 }
 
-export default function Blog({ posts }: Props) {
+export default function Blog({ posts, images }: Props) {
   const blogs = posts.map((post) => (
     <BlogCard title={post.title} date={post.date} key={post.title} />
   ))
-  const gallery = galleryImages.map((img) => (
-    <SwiperSlide key={img.id}>
-      <GalleryItem id={img.id} desc={img.desc} src={img.src} />
+  const gallery = images.map((img) => (
+    <SwiperSlide key={img.title}>
+      <GalleryItem desc={img.desc} title={img.title} src={img.src} />
     </SwiperSlide>
   ))
 
   return (
     <>
-      <Layout>
+      <Layout headerCls='sticky top-0 bg-slate-100 dark:bg-slate-900 z-50'>
         <div className={styles.page}>
           <main className={styles.main}>
             <h1 style={font.style}>ARTICLES</h1>
@@ -52,9 +59,26 @@ export default function Blog({ posts }: Props) {
             <div className={styles.gallery}>
               <h1 style={font.style}>GALLERY</h1>
               <section className={styles.carousel}>
-                <Swiper>
+                <Swiper
+                  modules={[Navigation]}
+                  loop
+                  navigation={{
+                    prevEl: '#prev',
+                    nextEl: '#next'
+                  }}
+                  effect={'creative'}
+                >
                   {gallery}
                 </Swiper>
+
+                <div className={styles['gallery-actions']}>
+                  <button id='prev'>
+                    <ArrowLeft />
+                  </button>
+                  <button id='next'>
+                    <ArrowRight />
+                  </button>
+                </div>
               </section>
             </div>
           </aside>

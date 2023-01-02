@@ -1,7 +1,8 @@
 import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
-import type { Blog, BlogListItem } from '@tds/blog'
+import galleryItems from '../_data/gallery/index.json'
+import type { Blog, BlogListItem, GalleryItem } from '@tds/blog'
 
 const postDir = join(process.cwd(), '_data/blogs')
 
@@ -42,3 +43,16 @@ export const getAllPosts = () => {
   return res
 }
 
+export const getAllGalleryImages = () => {
+  const res: GalleryItem[] = []
+  galleryItems.forEach((item) => {
+    const path = `/assets/gallery/${item.slug}`
+    res.push({
+      desc: item.desc,
+      title: item.title,
+      src: path
+    })
+  })
+
+  return res
+}
