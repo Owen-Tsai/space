@@ -13,7 +13,7 @@ export default function GalleryItem(props: GalleryItem) {
           }} />
         </div>
       </Zoom>
-      <div className='text-slate-800 dark:text-slate-100 my-3'>
+      <div className='text-slate-800 dark:text-slate-50 my-3'>
         <div className='text-2xl font-serif font-bold'>{props.title}</div>
         <span className='text-slate-400 pl-4 italic'>&mdash; 摄于{props.desc}</span>
       </div>

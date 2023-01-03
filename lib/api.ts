@@ -2,7 +2,7 @@ import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 import galleryItems from '../_data/gallery/index.json'
-import type { Blog, BlogListItem, GalleryItem } from '@tds/blog'
+import type { Blog, GalleryItem } from '@tds/blog'
 
 const postDir = join(process.cwd(), '_data/blogs')
 
@@ -11,8 +11,8 @@ export const getPostSlugs = () => {
 }
 
 export const getPostBySlug = (
-  slug: string, short = true
-): Blog | BlogListItem => {
+  slug: string, fields: Array<keyof Blog>
+): Partial<Blog> => {
   const realSlug = slug.replace(/\.mdx$/, '')
   const fullPath = join(postDir, `${realSlug}.mdx`)
   const fileContent = fs.readFileSync(fullPath, 'utf-8')
@@ -22,22 +22,28 @@ export const getPostBySlug = (
     throw new Error(`[api] Post ${slug} lacks required front-matter attribute(s).`)
   }
 
-  const res = {
-    title: data.title,
-    date: data.date,
-  }
-  if (!short) {
-    (res as Blog).content = content
-  }
+  const res: Partial<Blog> = {}
+
+  fields.forEach((field) => {
+    if (field === 'content') {
+      res.content = content
+    } else if (field === 'slug') {
+      res.slug = realSlug
+    } else {
+      res[field] = data[field]
+    }
+  })
 
   return res
 }
 
 export const getAllPosts = () => {
   const slugs = getPostSlugs()
-  const res: BlogListItem[] = []
+  const res: Partial<Blog>[] = []
   slugs.forEach((slug) => {
-    res.push(getPostBySlug(slug, true))
+    res.push(getPostBySlug(slug, [
+      'title', 'date', 'slug'
+    ]))
   })
 
   return res

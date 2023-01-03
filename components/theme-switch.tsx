@@ -19,7 +19,7 @@ export default function ThemeSwitch({ size = 20, cls }: PropsType) {
   if (!mounted) return null
 
   const icon = theme === 'dark'
-    ? <Sun size={size} className='text-slate-100' />
+    ? <Sun size={size} className='text-slate-50' />
     : <Moon size={size} className='text-slate-800' />
 
   return (

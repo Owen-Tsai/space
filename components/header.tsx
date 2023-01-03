@@ -23,8 +23,8 @@ export default function Header(props: Props) {
     : <Image src={logo} alt='Site Logo' />
 
   return (
-    <header>
-      <div className={styles.header}>
+    <header className={props.cls}>
+      <div className={styles['header-main']}>
         <div className={styles['logo-wrapper']}>
           {renderedLogo}
         </div>

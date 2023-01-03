@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import Layout from '@layouts/default-layout'
 import { Abril_Fatface } from '@next/font/google'
 import { getAllPosts, getAllGalleryImages } from '@lib/api'
@@ -7,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper'
 import { ArrowLeft, ArrowRight } from 'react-feather'
 
-import type { BlogListItem, GalleryItem as GalleryListItem } from '@tds/blog'
+import type { Blog, GalleryItem as GalleryListItem } from '@tds/blog'
 
 import styles from '@css/blog.module.css'
 import 'swiper/css'
@@ -19,7 +20,7 @@ const font = Abril_Fatface({
 })
 
 type Props = {
-  posts: BlogListItem[],
+  posts: Partial<Blog>[],
   images: GalleryListItem[]
 }
 
@@ -37,7 +38,7 @@ export const getStaticProps = async () => {
 
 export default function Blog({ posts, images }: Props) {
   const blogs = posts.map((post) => (
-    <BlogCard title={post.title} date={post.date} key={post.title} />
+    <BlogCard title={post.title} date={post.date} key={post.title} slug={post.slug} />
   ))
   const gallery = images.map((img) => (
     <SwiperSlide key={img.title}>
@@ -47,7 +48,10 @@ export default function Blog({ posts, images }: Props) {
 
   return (
     <>
-      <Layout headerCls='sticky top-0 bg-slate-100 dark:bg-slate-900 z-50'>
+      <Head>
+        <title>Blog | Space</title>
+      </Head>
+      <Layout headerCls='sticky top-0 bg-slate-50 dark:bg-slate-900 z-50'>
         <div className={styles.page}>
           <main className={styles.main}>
             <h1 style={font.style}>ARTICLES</h1>
