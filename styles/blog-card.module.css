@@ -1,16 +1,16 @@
 .card {
-  @apply border border-slate-300 dark:border-slate-700 px-6 py-4 min-h-[220px] duration-200
+  @apply border border-gray-300 dark:border-gray-700 px-6 py-4 min-h-[220px] duration-200
   flex flex-col justify-between rounded;
 }
 
 .card:hover {
-  @apply border-slate-800 dark:border-slate-50 shadow;
+  @apply border-gray-800 dark:border-gray-50 shadow;
 }
 
 .card > h2 {
-  @apply text-3xl text-slate-800 dark:text-slate-50;
+  @apply text-3xl text-gray-800 dark:text-gray-50;
 }
 
 .card > span {
-  @apply text-lg text-slate-400;
+  @apply text-lg text-gray-400;
 }

@@ -4,7 +4,7 @@
 
 .main {
   max-width: 900px;
-  @apply lg:border-l-2 px-8 border-slate-800 dark:border-slate-50 w-full lg:w-3/4 lg:pb-8;
+  @apply lg:border-l-2 px-8 border-gray-800 dark:border-gray-50 w-full lg:w-3/4 lg:pb-8;
 }
 
 .title {
@@ -15,12 +15,12 @@
   @apply text-6xl;
 }
 .title > span {
-  @apply block text-lg text-slate-500 mt-2;
+  @apply block text-lg text-gray-500 mt-2;
 }
 
 .aside {
   height: calc(100vh - var(--header-height));
   top: var(--header-height);
   padding-top: 10vh;
-  @apply w-full lg:w-1/4 px-6 lg:border-l-2 border-slate-800 dark:border-slate-50 sticky right-0 overflow-hidden flex-grow-0;
+  @apply w-full lg:w-1/4 px-6 lg:border-l-2 border-gray-800 dark:border-gray-50 sticky right-0 overflow-hidden flex-grow-0;
 }

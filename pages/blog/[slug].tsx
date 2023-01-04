@@ -46,7 +46,7 @@ export default function Story({ content, date, title, slug }: Props) {
   const titleMeta = `${title} | Space`
 
   return (
-    <Layout headerCls='sticky top-0 bg-slate-50 dark:bg-slate-900 z-50'>
+    <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
       <Head>
         <title>{titleMeta}</title>
       </Head>

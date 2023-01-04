@@ -38,7 +38,7 @@ export default function Header(props: Props) {
       </div>
       <div className={styles.toolbar}>
         <div className='flex items-center justify-between px-6'>
-          <div className='text-slate-500'>
+          <div className='text-gray-500'>
             {props.children}
           </div>
           <ThemeSwitch cls='!bg-transparent !dark:bg-transparent' />

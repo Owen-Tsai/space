@@ -51,7 +51,7 @@ export default function Blog({ posts, images }: Props) {
       <Head>
         <title>Blog | Space</title>
       </Head>
-      <Layout headerCls='sticky top-0 bg-slate-50 dark:bg-slate-900 z-50'>
+      <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
         <div className={styles.page}>
           <main className={styles.main}>
             <h1 style={font.style}>ARTICLES</h1>

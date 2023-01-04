@@ -19,12 +19,12 @@ export default function ThemeSwitch({ size = 20, cls }: PropsType) {
   if (!mounted) return null
 
   const icon = theme === 'dark'
-    ? <Sun size={size} className='text-slate-50' />
-    : <Moon size={size} className='text-slate-800' />
+    ? <Sun size={size} className='text-gray-50' />
+    : <Moon size={size} className='text-gray-800' />
 
   return (
     <button
-      className={cn(cls, 'inline-flex items-center justify-center p-2 bg-slate-200 dark:bg-slate-900 rounded')}
+      className={cn(cls, 'inline-flex items-center justify-center p-2 bg-gray-200 dark:bg-gray-900 rounded')}
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
     >
       {icon}
