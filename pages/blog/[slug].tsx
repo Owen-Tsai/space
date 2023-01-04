@@ -1,12 +1,17 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
+import { useEffect, createRef } from 'react'
 import Layout from '@layouts/default-layout'
 import { serialize } from 'next-mdx-remote/serialize'
 import { getPostBySlug, getPostSlugs } from '@lib/api'
 import Article from '@comps/article'
 import rehypeHighlight from 'rehype-highlight'
-import 'highlight.js/styles/nord.css'
+import rehypeToc from '@jsdevtools/rehype-toc'
+import rehypeSlug from 'rehype-slug'
+import rehypeHeadings from 'rehype-autolink-headings'
+import remarkUnwrapImages from 'remark-unwrap-images'
+import styles from '@css/blog-content.module.css'
 
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
@@ -24,6 +29,16 @@ type Props = {
 export default function Story({ content, date, title, slug }: Props) {
   const router = useRouter()
 
+  const aside = createRef<HTMLElement>()
+
+  useEffect(() => {
+    if (aside.current?.querySelector('nav') === null) {
+      const renderedToc = document.querySelector('article > nav')
+      const toc = renderedToc?.cloneNode(true)
+      toc && aside.current?.appendChild(toc)
+    }
+  })
+
   if (!router.isFallback && !slug) {
     return <ErrorPage statusCode={404} />
   }
@@ -35,15 +50,15 @@ export default function Story({ content, date, title, slug }: Props) {
       <Head>
         <title>{titleMeta}</title>
       </Head>
-      <div>
-        <main>
-          <div>
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <div className={styles.title}>
             <h1>{title}</h1>
             <span>{date}</span>
           </div>
           <Article content={content} />
         </main>
-        <aside></aside>
+        <aside className={`${styles.aside} story-toc-aside`} ref={aside}></aside>
       </div>
     </Layout>
   )
@@ -75,7 +90,16 @@ export const getStaticProps = async ({ params }: { params: RouteParam }) => {
   const mdxSource = await serialize(content || '**no content in this file**', {
     mdxOptions: {
       development: false,
-      rehypePlugins: [rehypeHighlight]
+      remarkPlugins: [
+        remarkUnwrapImages
+      ],
+      rehypePlugins: [
+        rehypeHighlight,
+        rehypeSlug,
+        rehypeHeadings,
+        rehypeToc,
+      ],
+      format: 'mdx',
     },
   })
 

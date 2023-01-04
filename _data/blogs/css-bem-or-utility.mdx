@@ -3,4 +3,209 @@ title: CSS：“工具类优先”还是BEM
 date: 2021.12.16
 ---
 
-hello world
+无论使用何种技术何种框架，依然无法改变浏览器只能够解析 HTML、CSS 和 JS 的事实。
+
+JS 在漫长的发展过程中逐渐变得羽翼丰满，ECMA 标准不断完善和健壮，各类框架的适用场景从小项目到交互密集型项目完全覆盖，极大地降低了 JS 的维护难度。而对于并非是编程语言的 CSS 来说，如何才能够让样式表规整、易读、易维护呢？是的，你可以选用 Sass/Scss，Stylus 之类的技术进行样式预处理，但这依然无法改变一个问题——我们终究需要编写样式规则，即便有正儿八经的编程语言的帮助。
+
+## BEM 命名法
+
+<Alert>
+你可以直接访问 [BEM 官方网站](http://getbem.com/) 来了解什么是 BEM，以及它是否对你有所帮助。
+</Alert>
+
+原本我打算从 CSS 的弊病开始 *(严格来讲如果你足够幸运，你的团队一直保持着良好的习惯和规范，那么这些弊病可以得到规避)*，讲一讲为什么 BEM 会出现。但本文的重点并不在于介绍如何应用 BEM 方法上。事实上 BEM 已经成为了使用广泛的方法论，通过 block、element（通常与 block 具有依赖关系，独立存在没有语义的元素）和 modifier 覆盖了常见的 HTML 结构中的各元素。
+
+```css
+.container {}
+.container__header {}
+.container__action {}
+.container__action--disabled {}
+```
+
+BEM 能够在一定程度上解决 CSS 在模块化上的弊端——由于 CSS 层叠和继承的特性，没有作用域的样式规则很容易造成样式污染，维护者们需要花费大量时间覆盖某些样式让另一些样式生效，甚至是滥用`!important`修饰符或直接利用 HTML 标签的`style`属性。而借助于 BEM 命名法，样式规则总是依赖于页面上的 block 存在。
+
+## BEM 规范的缺憾
+
+如果你时常关注 CSS 相关的技术，你肯定会知道[TailwindCSS](https://tailwindcss.com/)。Tailwind 官网上对于自己的描述是“utility-first CSS framework (工具优先的 CSS 框架)”。好的，先等一下，那么什么是工具优先？
+
+在 tailwind 的语境下，工具优先指的是使用工具类完成样式的合成。此工具类非编程语言中的工具类概念，而是一些诸如`text-center`, `mb-2`之类的`class`名称，可以作用在任何 HTML 元素上并实现其名称对应的样式。
+
+那么 tailwindcss 为什么会出现呢？其创始人，Adam Wathan，在他的个人网站上发布了[这样一篇文章](https://adamwathan.me/css-utility-classes-and-separation-of-concerns/)，阐述了为什么诸如 BEM 一样的“最佳实践”可能有时并不能起到效果。
+
+这篇文章有几千个单词，我会简要概括一下，但依然建议你通读全文。
+
+### 相类组件的样式
+
+试想一下我们有一个组件，这个组件是介绍知名作家的卡片：
+
+```html
+<div class="author-card">
+  <img class="author-card__photo" src="...">
+  <h2 class="author-card__name">Agatha Christie</h2>
+  <div class="author-card__bio">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at sodales odio.
+  </div>
+</div>
+```
+
+随后，我们需要另一个组件，介绍知名作家的某一本书。而这两个组件在外观上一致，如下图所示。
+
+![两个外观一致的组件](/assets/gallery/rdr-wild.png)
+
+你可能会最先想到这个组件可以完全使用`author-card`的样式。没错，因为这两个组件具有完全一致的外观，因此可以采用相同的 HTML 结构和 CSS 样式。但是，`author-card`这个名称可以让读代码的人意识到当前的组件是一个介绍作者的卡片，如果在其中看到了介绍书目的内容难免会让人感觉疑惑。这种疑惑来源于被破坏的稀碎的语义化——这同样违背了我们使用 BEM 命名法的初衷之一。
+
+我们可以将第二个组件命名为`book-card`，并且原封不动照搬`author-card`的样式。是的，这样就不用担心语义化的问题了 ~~（事实上如果你的团队担心语义化的问题，我必须恭喜你，因为你在一个追求代码整洁的团队，这是作为程序员而言最幸福的事情之一）~~。但随之而来的是代码的重复，而这破坏了 DRY (Don't Repeat Yourself) 原则。
+
+显然，最后我们只有一种方法了，就是将这两种卡片进行合并，以`card`代替原先的`book-card`和`author-card`。这既能解决代码重复的问题，也不影响（或者说基本上没有太大影响）HTML 的语义化——毕竟他大舅他二舅都是他舅，book card 和 author card 都是 card。
+
+但假如需求变更，`book-card`和`author-card`中出现了区别，那么最后一种方法显然就失去了用武之地，我们又回到了故事的开头。
+
+### 高频复用的组件的样式
+
+另一种 BEM 捉襟见肘的情形也蛮普遍的，对于一些页面上非常普遍的元素——例如按钮——没法很好的遵循 BEM 的命名规范。原因显而易见，两个八竿子打不着的组件都可能包含有相同样式的按钮，一种常见的避免重复代码的做法是将按钮抽象成子组件并为之编写样式，例如：
+
+```html
+<div class="card">
+  <!-- ... -->
+  <div class="card__actions">
+    <button class="btn btn--primary">按钮</button>
+    <button class="btn">次要按钮</button>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <!-- ... -->
+  <div class="sidebar__actions">
+    <button class="btn btn--primary">按钮</button>
+    <button class="btn">次要按钮</button>
+  </div>
+</aside>
+```
+
+```scss
+// written in scss
+.btn {
+  padding: 4px 16px;
+  font-size: 1rem;
+  border: 1px solid $color--border;
+
+  &--primary {
+    color: #fff;
+    background-color: #2044de;
+  }
+}
+```
+
+上面的代码中，为了避免重复编写按钮的样式，我们在局部不遵循 BEM 的命名方式，而是单独创建`.btn`元素并且为其编写通用的样式。但当我们需要为`.card`和`,sidebar`中的按钮之间增加边距时，问题就来了。按照 BEM 的要求，我们需要更改一下 HTML，为元素增加类名。
+
+```html
+<div class="card">
+  <!-- ... -->
+  <div class="card__actions">
+    <button class="card__actions__item btn btn--primary">按钮</button>
+    <button class="card__actions__item btn">次要按钮</button>
+  </div>
+</div>
+
+<aside class="sidebar">
+  <!-- ... -->
+  <div class="sidebar__actions">
+    <button class="sidebar__actions__item btn btn--primary">按钮</button>
+    <button class="sidebar__actions__item btn">次要按钮</button>
+  </div>
+</aside>
+```
+
+增加了新的 BEM 标识之后，我们就可以利用标识增加间距：
+
+```css
+.card__actions__item:not(:first-child) {
+  margin-left: 1rem;
+}
+.sidebar__actions__item:not(:first-child) {
+  margin-top: 1rem;
+}
+```
+
+如果将程序的规模扩大一百倍，那么你的样式代码里很容易充满了类似于`margin-top`，`padding-left`之类的样式，这些样式只为了调整高频使用的子组件在不同的父组件中独特的样式（例如上面说到的间距）。很显然，这会使得 CSS 代码逐渐变得冗长。
+
+## 工具优先的优点和缺陷
+
+为了解决在实际开发过程中出现的问题，TailwindCSS 横空出世了。自然，BEM 的缺陷可以通过 TailwindCSS 弥补，但引入了“工具优先”这种概念的过程中也会带来新的问题。就如同技术领域中大量的其他问题一样，如何高效地编写 CSS 也是一个没有银弹的问题。TailwindCSS 和 BEM 命名法实际上只是一个问题的两个方面。
+
+### 利于实现设计规范
+
+TailwindCSS 由`class`族组成。这些类名都是确定的，且很大程度上可以自行配置，囊括了颜色、尺寸、字体在内的几乎全部设计原子。开发团队可以通过配置符合自己品牌和产品的主题使得 TailwindCSS 更好地帮助开发者遵照设计规范而不必经常性查阅设计守则或浏览需要引用的 CSS 变量。
+
+如果足够不幸地，你的团队并没有设计规范，那么在开发一个项目时往往会遇到这种情况：
+
+- 普通文字在首页时是16像素，在另一个页面是14像素；
+- 文字的颜色在一些页面上是#000，在另一些页面上不是纯黑色；
+- 按钮的悬浮样式在一些页面上是固定的颜色值，而在另一些页面上通过`lighten()`或`darken()`之类的方法实现变色；
+- ...
+
+毫无疑问，在一个成熟的商业产品中这些被视为是开发商极不专业的表现，也会让用户产生疑惑。而借助于 TailwindCSS，开发者的选择变少了：每个人只能从团队配置的颜色和字号中选取，不能够“随意发挥”。
+
+### 利于添加“小”样式
+
+不得不承认的是，就跟上文[BEM 规范的缺憾 - 高频复用的组件的样式](#gao-pin-fu-yong-de-zu-jian-de-yang-shi)里说到的那样，在项目进展一段时间之后大量的`margin-top: 1rem`会充斥整个项目，任何一个前端工程师都会逐渐变得烦躁。没有人喜欢重复一行代码成百上千遍，是的，哪怕一行。
+
+TailwindCSS 利于添加这种小样式，即便你对 TailwindCSS 厌恶到了不愿意使用的程度，从其中抽出一个子集用来实现这些可能需要高频应用的样式总是好的。这些“小”样式不足以破坏我们异常珍惜的 HTML 语义化，也能够消除我们在重复书写`margin`或`padding`时的头疼症状。
+
+### 不利于记忆
+
+大量的工具类使得 HTML 结构中几乎可以不出现`class`属性，但当然也使得开发者必须要时常检阅文档。是的，借助于 VSCode 的插件或者诸如 WebStorm 这种地表最强的 IDE，语法智能提示会帮助开发者补全这些类名；但对于没有使用 VSCode 或买不起 WebStorm 的开发者而言这个过程无疑是痛苦不堪的。
+
+### 破坏语义化和可读性
+
+这自然不必多说，看一下下面的代码：
+
+```html
+<div class="flex flex-col md:flex-row items-center md:justify-center">
+  <img class="block mx-auto my-2 w-full md:w-1/2 md:flex-shrink-0 md:flex-grow-0" src="..." alt="...">
+  <div class="md:w-1/2 flex-grow w-full p-2">
+    <h2 class="text-gray-900 font-bold text-center md:text-left">The Big Four</h2>
+    <p class="text-gray-600 leading-6"></p>
+  </div>
+</div>
+```
+
+你读完了之后，依然不能确定这段代码究竟是页面上的哪一个部分，这会给维护和修改带来极大的困扰。不仅如此，每一行充斥着多个`class`。如果你打开一个使用了 TailwindCSS 的网页，在开发者工具中审查这个网页的元素，你会发现这是很普遍的。有一些网站在单个元素上堆砌了足足70多个类名。我的上帝。
+
+人们在不断学习工程化和规范化的过程中学会了将表现与内容分离，也就是说诸如`text-center`这种设计上的决定不应当体现在内容（HTML）中。假设有一天设计上的决定发生了变更，有一部分文本需要从居中调整为居左，那么分辨哪些`text-center`应当被调整为`text-left`的过程自然不如在语义化的 HTML 所对应的语义化的 CSS 文件中直接修改来的方便快捷。
+
+### 多余的抽象层级
+
+一些对于 Tailwind 更加本质的批评也很有道理。让我们看回到`author-card`与`book-card`这个例子，卡片属于组件，Tailwind 鼓励对组件进行抽象。通过使用`@apply`指令，可以将类名对应的样式应用于元素上，例如：
+
+```scss
+// written in scss
+.author-card, .book-card {
+  @apply px-4 py-2 flex text-gray-800;
+
+  .author-card__title, .book-card__title {
+    @apply text-2xl font-bold;
+  }
+  .author-card__action, .book-card__action {
+    @apply text-gray-600 flex items-center justify-center;
+  }
+
+  // ...
+}
+```
+
+如果你使用`@apply`，你会发现你依然在使用 BEM 对 HTML 标签进行命名，只不过当你需要写 CSS 键值对的时候，你使用了 Tailwind 的类名代替。这实际上是一种无意义的抽象，因为你似乎回到了原点。这本质上跟直接编写 CSS 完全一致。
+
+事实上，就连 TailwindCSS 的创作者 Adam 本人也[极力反对](https://twitter.com/adamwathan/status/1226511611592085504?lang=en)使用`@apply`。当你使用一个组件化框架的时候，你总是可以封装组件来避免使用`@apply`指令。但是当你恪守传统（或者足够不幸地，你入职了一个恪守传统、前后端不分离的公司）时，你会发现应用`@apply`不可避免，而你已经在 TailwindCSS 的裹挟下违背了“工具优先”的准则，开始采用 BEM 的方式来实现一种无意义的抽象。
+
+## 没有银弹
+
+在第二节开头我提到过，就如同技术领域中大量的其他问题一样，如何高效地编写 CSS 也是一个没有银弹的问题。TailwindCSS 和 BEM 命名法实际上只是一个问题的两个方面，而这个问题就是如何高效开发和维护 CSS。在充分尝试过使用 BEM、不使用 BEM、使用工具优先的 TailwindCSS 之后，这是我感到最可惜的地方——我们目前仍然没有一种完美的解决方案。
+
+目前在这一问题上，比较科学的做法往往是将二者结合并在“令项目组和同仁们感到舒适的前提下”形成一个平衡。团队应当制定自己的 CSS 规范，在一定程度上享受使用工具优先框架的便捷性，同时也能规避 TailwindCSS 的一些潜在问题，力求使代码简洁易懂，便于维护。
+
+**参考阅读**
+
+- [Why I Don't Like TailwindCSS, By Aleksandr Hovhannisyan](https://www.aleksandrhovhannisyan.com/blog/why-i-dont-like-tailwind-css/)
+- [CSS Utility Classes and "Separation of Concerns"， BY Adam Wathan](https://adamwathan.me/css-utility-classes-and-separation-of-concerns/)
+- [Why BEM In A Nutshell](https://blog.decaf.de/2015/06/24/why-bem-in-a-nutshell/)

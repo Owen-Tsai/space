@@ -1,10 +1,15 @@
 import Link from 'next/link'
-import type { Blog, BlogListItem } from'@tds/blog'
+import type { Blog } from'@tds/blog'
+import styles from '@css/blog-card.module.css'
 
-export default function BlogCard(props: BlogListItem) {
+export default function BlogCard(props: Partial<Blog>) {
+  if (!props.slug) {
+    throw new Error('[]')
+  }
   return (
-    <Link className='bg-slate-200 dark:bg-slate-700' href='/'>
-      <h2 className='text-2xl text-inherit'>{props.title}</h2>
+    <Link className={styles.card} href={`/blog/${props.slug}`} as={`/blog/${props.slug}`}>
+      <h2>{props.title}</h2>
+      <span>{props.date}</span>
     </Link>
   )
 }
