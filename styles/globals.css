@@ -38,3 +38,7 @@ html, body {
 .story-toc-aside .toc-link-h2 {
   @apply text-gray-600 dark:text-gray-300;
 }
+
+[data-rmiz-modal-overlay="visible"] {
+  @apply bg-slate-100 dark:bg-slate-900;
+}

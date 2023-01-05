@@ -7,6 +7,8 @@ import Header from '@comps/header'
 import { useState, useEffect } from 'react'
 import styles from '@css/home.module.css'
 import { Heart } from 'react-feather'
+import Transition from '@layouts/index'
+import { m } from 'framer-motion'
 
 const displayFont = Abril_Fatface({
   weight: ['400'],
@@ -27,44 +29,51 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Space</title>
-        <meta name="description" content="Yet another web debeloper's blog" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-        <style>{`
-          html, body {
-            padding: 0;
-            margin: 0;
-          }
-        `}</style>
-      </Head>
-      <div className={cn(styles.page, themeClsName)}>
-        <Header />
-        <main className={styles.main}>
-          <div className={styles.container}>
-            <h1 style={displayFont.style}>
-              Yet Another
-              <br />
-              Web
-              <br className='lg:hidden' />
-              <span className='hidden lg:inline'>&nbsp;</span>
-              Developer.
-            </h1>
-          </div>
-          <footer className={styles.footer}>
-            <div className='flex items-center'>
-              Created with
-              <Heart color='rgb(234,85,74)' size='18' fill='rgb(234,85,74)' className='mx-2' />
-              by <Link href='https://www.github.com/Owen-Tsai/' className='ml-1 font-bold'>Owen</Link>
+      <Transition>
+        <Head>
+          <title>Space</title>
+          <meta name="description" content="Yet another web debeloper's blog" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.ico" />
+          <style>{`
+            html, body {
+              padding: 0;
+              margin: 0;
+            }
+          `}</style>
+        </Head>
+        <div className={cn(styles.page, themeClsName)}>
+          <Header />
+          <main className={styles.main}>
+            <div className={styles.container}>
+              <m.h1
+                style={displayFont.style}
+                initial={{ y: -24, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: 'tween', duration: 0.8, delay: 0.5 }}
+              >
+                Yet Another
+                <br />
+                Web
+                <br className='lg:hidden' />
+                <span className='hidden lg:inline'>&nbsp;</span>
+                Developer.
+              </m.h1>
             </div>
-          </footer>
-        </main>
-        <div className={cn(styles.actions, 'fixed w-full left-0 bottom-6')}>
-          <Link href='/blog'>BLOG</Link>
-          <Link href='/about'>ABOUT</Link>
+            <footer className={styles.footer}>
+              <div className='flex items-center'>
+                Created with
+                <Heart color='rgb(234,85,74)' size='18' fill='rgb(234,85,74)' className='mx-2' />
+                by <Link href='https://www.github.com/Owen-Tsai/' className='ml-1 font-bold'>Owen</Link>
+              </div>
+            </footer>
+          </main>
+          <div className={cn(styles.actions, 'fixed w-full left-0 bottom-6')}>
+            <Link href='/blog'>BLOG</Link>
+            <Link href='/about'>ABOUT</Link>
+          </div>
         </div>
-      </div>
+      </Transition>
     </>
   )
 }

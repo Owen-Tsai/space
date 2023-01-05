@@ -2,11 +2,13 @@ import Head from 'next/head'
 import Layout from '@layouts/default-layout'
 import { Abril_Fatface } from '@next/font/google'
 import { getAllPosts, getAllGalleryImages } from '@lib/api'
-import BlogCard from '@comps/blog-card'
+import Page from '@comps/post-page'
 import GalleryItem from '@comps/gallery-item'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper'
 import { ArrowLeft, ArrowRight } from 'react-feather'
+import Transition from '@layouts/index'
+import { useState } from 'react'
 
 import type { Blog, GalleryItem as GalleryListItem } from '@tds/blog'
 
@@ -20,7 +22,7 @@ const font = Abril_Fatface({
 })
 
 type Props = {
-  posts: Partial<Blog>[],
+  posts: Partial<Blog>[][],
   images: GalleryListItem[]
 }
 
@@ -37,57 +39,80 @@ export const getStaticProps = async () => {
 }
 
 export default function Blog({ posts, images }: Props) {
-  const blogs = posts.map((post) => (
-    <BlogCard title={post.title} date={post.date} key={post.title} slug={post.slug} />
-  ))
+  const [page, setPage] = useState(1)
+
+  const postsOnPage = posts[page - 1]
+
   const gallery = images.map((img) => (
     <SwiperSlide key={img.title}>
       <GalleryItem desc={img.desc} title={img.title} src={img.src} />
     </SwiperSlide>
   ))
 
+  const toPrevPage = () => {
+    page - 1 > 0 && setPage(page - 1)
+  }
+
+  const toNextPage = () => {
+    page + 1 <= posts.length && setPage(page + 1)
+  }
+
   return (
     <>
-      <Head>
-        <title>Blog | Space</title>
-      </Head>
-      <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
-        <div className={styles.page}>
-          <main className={styles.main}>
-            <h1 style={font.style}>ARTICLES</h1>
-            <section className={styles.list}>
-              {blogs}
-            </section>
-          </main>
-          <aside className={styles.aside}>
-            <div className={styles.gallery}>
-              <h1 style={font.style}>GALLERY</h1>
-              <section className={styles.carousel}>
-                <Swiper
-                  modules={[Navigation]}
-                  loop
-                  navigation={{
-                    prevEl: '#prev',
-                    nextEl: '#next'
-                  }}
-                  effect={'creative'}
-                >
-                  {gallery}
-                </Swiper>
-
-                <div className={styles['gallery-actions']}>
-                  <button id='prev'>
+      <Transition>
+        <Head>
+          <title>Blog | Space</title>
+        </Head>
+        <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
+          <div className={styles.page}>
+            <main className={styles.main}>
+              <h1 style={font.style}>ARTICLES</h1>
+              <section className={styles.list}>
+                <Page posts={postsOnPage} />
+              </section>
+              {
+                posts.length > 1 &&
+                <div className={styles.pagination}>
+                  <button onClick={() => toPrevPage()}>
                     <ArrowLeft />
                   </button>
-                  <button id='next'>
+                  <span className='text-lg mx-2'>{page}/{posts.length}</span>
+                  <button onClick={() => toNextPage()}>
                     <ArrowRight />
                   </button>
                 </div>
-              </section>
-            </div>
-          </aside>
-        </div>
-      </Layout>
+              }
+            </main>
+            <aside className={styles.aside}>
+              <div className={styles.gallery}>
+                <h1 style={font.style}>GALLERY</h1>
+                <section className={styles.carousel}>
+                  <Swiper
+                    modules={[Navigation]}
+                    loop
+                    navigation={{
+                      prevEl: '#prev',
+                      nextEl: '#next'
+                    }}
+                    effect={'creative'}
+                  >
+                    {gallery}
+                  </Swiper>
+
+                  <div className={styles['gallery-actions']}>
+                    <button id='prev'>
+                      <ArrowLeft />
+                    </button>
+                    <button id='next'>
+                      <ArrowRight />
+                    </button>
+                  </div>
+                </section>
+              </div>
+            </aside>
+          </div>
+        </Layout>
+      </Transition>
     </>
   )
 }

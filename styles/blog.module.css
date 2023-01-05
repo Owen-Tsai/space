@@ -30,14 +30,20 @@
   @apply text-right;
 }
 
-.gallery-actions > button {
+.gallery-actions > button,
+.pagination > button {
   @apply inline-flex items-center justify-center text-gray-800 dark:text-gray-200 p-1;
 }
 
-.gallery-actions svg {
+.gallery-actions svg,
+.pagination svg {
   stroke-width: 1.5;
 }
 
 .list {
   @apply grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6;
+}
+
+.pagination {
+  @apply flex items-center justify-center mt-8;
 }
