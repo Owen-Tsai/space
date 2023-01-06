@@ -1,5 +1,5 @@
 .page {
-  @apply relative flex flex-col lg:flex-row lg:pl-[142px];
+  @apply relative flex flex-col lg:flex-row lg:pl-[142px] bg-gray-50 dark:bg-gray-900;
 }
 
 .main {

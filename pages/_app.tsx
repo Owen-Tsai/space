@@ -3,9 +3,14 @@ import type { AppProps } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
-import dynamic from 'next/dynamic'
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import '@css/code-highlight.scss'
+import '@css/cursor.scss'
+
+const Cursor = dynamic(() => import('../components/cursor'), {
+  ssr: false
+})
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -16,18 +21,17 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     setMounted(true)
+
+    window.localStorage.removeItem('cursor-last-pos')
   }, [])
 
   if (!mounted) return null
 
-  const color: string = theme === 'light'
-    ? '241, 245, 249'
-    : '15, 23, 42'
-
   return (
     <AnimatePresence mode='wait' initial={true}>
       <ThemeProvider attribute='class' defaultTheme='light' key={route}>
-          <Component {...pageProps} />
+        <Component {...pageProps} />
+        <Cursor />
       </ThemeProvider>
     </AnimatePresence>
   )

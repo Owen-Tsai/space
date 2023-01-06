@@ -10,7 +10,7 @@
   background-size: 120%;
   background-position-y: bottom; 
   background-position-x: -5vw;
-  @apply h-screen bg-no-repeat flex flex-col;
+  @apply h-screen bg-no-repeat flex flex-col bg-gray-50 dark:bg-gray-900;
 }
 
 @media screen and (min-width: 1024px) {

@@ -1,0 +1,12 @@
+.custom-cursor-wrapper {
+  @apply fixed top-0 left-0 z-50 pointer-events-none mix-blend-difference;
+  .custom-cursor {
+    @apply w-5 h-5 bg-gray-50 rounded-full absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2;
+    backface-visibility: hidden;
+    transition: .2s;
+    transition-property: height, width;
+  }
+  .custom-cursor-ring {
+    @apply w-16 h-16 border border-gray-50 rounded-full absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2;
+  }
+}

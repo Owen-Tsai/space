@@ -38,13 +38,21 @@ export const getPostBySlug = (
 }
 
 export const getAllPosts = () => {
+  const pageSize = 8
   const slugs = getPostSlugs()
-  const res: Partial<Blog>[] = []
-  slugs.forEach((slug) => {
-    res.push(getPostBySlug(slug, [
-      'title', 'date', 'slug'
-    ]))
-  })
+  const res: Partial<Blog>[][] = []
+  for (let i = 0; i < Math.ceil(slugs.length / pageSize); i++) {
+    const remains = slugs.length - i * pageSize
+    const page: Partial<Blog>[] = []
+    for (let j = i * pageSize; j < Math.min(remains + pageSize * i, pageSize * (i + 1)); j++) {
+      const slug = slugs[j]
+      page.push(getPostBySlug(slug, [
+        'title', 'date', 'slug'
+      ]))
+    }
+
+    res.push(page)
+  }
 
   return res
 }

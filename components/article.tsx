@@ -2,6 +2,7 @@ import { MDXRemote } from 'next-mdx-remote'
 import styles from '@css/article.module.css'
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { JetBrains_Mono } from '@next/font/google'
+import { m } from 'framer-motion'
 
 const codeFont = JetBrains_Mono({
   weight: ['500']
@@ -21,14 +22,21 @@ export default function Article(
   { content }: { content: MDXRemoteSerializeResult }
 ) {
   return (
-    <article className={styles.story}>
+    <>
       <style jsx global>{`
         article code {
           font-family: ${codeFont.style.fontFamily};
           font-weight: ${codeFont.style.fontWeight};
         }
       `}</style>
-      <MDXRemote {...content} components={components} />
-    </article>
+      <m.article
+        className={styles.story}
+        initial={{ y: 24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: 'tween', duration: 0.5, delay: 1.2 }}
+      >
+        <MDXRemote {...content} components={components} />
+      </m.article>
+    </>
   )
 }

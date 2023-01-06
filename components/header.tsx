@@ -25,9 +25,9 @@ export default function Header(props: Props) {
   return (
     <header className={props.cls}>
       <div className={styles['header-main']}>
-        <div className={styles['logo-wrapper']}>
+        <Link className={styles['logo-wrapper']} href='/'>
           {renderedLogo}
-        </div>
+        </Link>
         
         <ThemeSwitch cls='md:hidden' />
         <div className={styles.navs}>

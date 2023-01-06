@@ -4,7 +4,7 @@
 }
 
 .card:hover {
-  @apply border-gray-800 dark:border-gray-50 shadow;
+  @apply border-gray-800 dark:border-gray-300;
 }
 
 .card > h2 {
