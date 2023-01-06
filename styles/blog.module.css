@@ -27,7 +27,7 @@
 }
 
 .gallery-actions {
-  @apply text-right;
+  @apply flex items-center justify-between;
 }
 
 .gallery-actions > button,
