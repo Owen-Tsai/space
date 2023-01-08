@@ -3,4 +3,77 @@ title: 每个人都该知道的 PostCSS
 date: 2021.12.18
 ---
 
-hello world
+PostCSS 是一个经常出现的名词，但与它的知名度不相匹配的则是相当多的对 PostCSS 认知上的错误。尤其是对于使用惯了样式预处理语言（例如 Sass、Less 或 Stylus）的开发者而言，掌握了对样式进行预处理的技术并且在一定程度上享受这样的技术带来的便利时，对同类型工具和技术也就感到不那么好奇了。
+
+但事实上，这也是对于 PostCSS 的一个最**主要的误解**，即把 PostCSS 当作和 Sass 等语言一样的样式预处理器。而当我们得知长久以来的印象被这样一行文字纠正时，可能又会对 PostCSS 燃起兴趣。而我认为，每一个编写 CSS 的人都应当了解 PostCSS，认识它时什么，以及在它的能力范围内能做到什么。
+
+## PostCSS 概述
+
+当我们说“我们的项目采用了 PostCSS“的时候，我们可能在同事指代两样东西：
+
+- PostCSS 包本身，也就是当我们运行`npm install postcss -D`时得到的；
+- 由 PostCSS 包驱动的，包含各类插件的完整生态链。
+
+PostCSS 是一个 Node.js 模块，它可以将样式代码解析成 AST（抽象语法树）。这就意味着我们可以通过 PostCSS 提供的 API 读写样式代码。在使用 PostCSS 之前，如果我们想要从项目目录中读取一份文件并且将这份文件序列化成树，我们可能需要编写大量的代码和正则表达式，而现在 PostCSS 帮我们实现了复杂的部分。剩下的工作则交由社区开发与维护的各种 [PostCSS 的插件](https://www.postcss.parts/)负责。这些插件将 AST 作为参数接受，处理后重新转换为字符串输出。每一个接收 AST 作为参数的插件都有可能会对其进行或不进行任何更改，PostCSS 会生成 sourcemap 文件来追踪其中的变化。
+
+<Alert>
+  PostCSS 可以对用户的样式代码进行处理，但不要求用户的样式代码完全遵循现行 CSS 标准。只要是 CSS-like 的语法，PostCSS 都可以对其进行解析。
+</Alert>
+
+说到这里我们容易看出 PostCSS 和样式预处理器之间的区别。样式预处理器提供了新的语法、程序和及结构和编译器，让你用一种新的方式编写样式代码；而 PostCSS 做的仅仅只是将用户编写的样式文件转换成了用户可以操作的 AST。但仅仅如此就带来了非常多的可能性，[Autoprefixer](https://github.com/postcss/autoprefixer)、[Sytlelint](https://stylelint.io/) 和 Vue 中的 deep 选择器等特性均利用 PostCSS 实现。
+
+## PostCSS 插件
+
+PostCSS 本身是提供了语法转换能力的平台，诸多工作都需要依靠 PostCSS 插件完成。PostCSS 社区内包含数不胜数的插件，涵盖了不同的方向和目的。其中有的是传统意义上的“样式预处理”，例如[nesting](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-nesting)允许用户使用类似 Sass 语言中选择器嵌套的方式编写样式代码；而另外一些则更像是“样式后处理”，例如[Autoprefixer](https://github.com/postcss/autoprefixer)将在用户编写的样式基础上添加额外的规则进行浏览器适配前缀。
+
+似乎是为了将 PostCSS 的能力发掘到极致，社区内还包含了更多[有趣的插件](https://www.postcss.parts/tag/fun)。其中Australian-Stylesheets 插件允许使用澳式英语编写样式代码，Chinese Stylesheets 插件允许使用普通话编写样式代码。
+
+### 编写 PostCSS 插件
+
+PostCSS 提供了诸多事件监听器，当树结构中特定的内容发生改变时执行监听的方法。基于事件编程实现特定的目的是 PostCSS 插件开发的主要思路。
+
+PostCSS 监听器主要包含`Declaration()`，`Rule()`，`AtRule()`和`Once()`等，更详细的事件列表和解释[在此处](https://postcss.org/api/#plugin)。其中，名称包含`exit`字样的事件（如`OnceExit()`等）在节点所有子孙处理完成后调用，而不带`exit`字样的事件则在节点所有子孙处理之前调用。
+
+下面是一个例子，将`color: random;`声明（该规则声明并不合法，但前文已经提及，PostCSS 可以解析此类 CSS-like 语法）转换为合法的 CSS 声明，并且随机生成一个颜色值作为声明的属性的值。
+
+```js
+const randomInt = (min, max) => (
+  Math.floor(Math.random() * (max - min + 1)) + min
+);
+
+const randomColor = () => (
+  `rgb(${randomInt(0, 256)}, ${randomInt(0, 256)}, ${randomInt(0, 256)})`
+);
+
+const plugin = () => {
+  postcssPlugin: 'random-color',
+  Declaration (decl) {
+    if (decl.prop === 'color' && decl.value === 'random') {
+      decl.value = randomColor()
+    }
+  },
+}
+
+plugin.postcss = true
+module.exports = plugin
+```
+
+<Alert title='注意' type='error'>
+在编写 PostCSS 插件时，常见的错误来源于死循环，尤其是增加规则、节点或声明时，增加的内容会改变语法树结构从而再次触发事件监听器内的方法，因此对规则、节点或声明进行“是否已经处理过”的判断是十分重要的。
+</Alert>
+
+### PostCSS 插件的规则
+
+PostCSS 插件往往遵循一个共同的原则，即：
+
+<Alert>做一件事，把它做好（Do one thing, and do it well）。</Alert>
+
+与很多以“整合”和“二次开发”为目的的开源产物不同，PostCSS 的社区更欢迎简单的插件。每一个插件应当只做一件事情，用户可以选择不同的插件实现不同的需求。
+
+当然，如果对“少量多次的取餐方式”感到不满，也可以选用社区挑选出来的插件包。每一个插件包都包含了若干个 PostCSS 插件，能够实现一组特定的任务。例如专注于使用面向未来的 CSS 特性的插件包允许开发者在编写样式代码时使用嵌套、仍在草案阶段的 CSS 特性，并且自动为它们添加历史兼容策略。
+
+**参考资料**
+
+- [PostCSS Architecture](https://postcss.org/docs/postcss-architecture)
+- [PostCSS Plugin Guidelines](https://github.com/postcss/postcss/blob/main/docs/guidelines/plugin.md)
+- [PostCSS v8 Plugin Migration](https://evilmartians.com/chronicles/postcss-8-plugin-migration)

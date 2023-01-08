@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef, createRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { m, LazyMotion, domAnimation } from 'framer-motion'
+import { isMobileDevice } from '@lib/utils'
 
 export default function Cursor () {
   const [position, setPos] = useState({
@@ -72,6 +73,10 @@ export default function Cursor () {
       })
     }
   })
+
+  if (isMobileDevice()) {
+    return null
+  }
 
   return (
     <div className='custom-cursor-wrapper'>
