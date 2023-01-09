@@ -1,7 +1,6 @@
 .header-main {
   @apply border-b-2 flex-shrink-0 border-gray-800 dark:border-gray-50 px-6 py-2 flex items-stretch justify-between
   lg:px-0 lg:py-0;
-
 }
 
 .logo-wrapper {
@@ -26,8 +25,4 @@
 
 .navs > a {
   @apply text-lg font-bold text-gray-800 dark:text-gray-50 flex items-end;
-
-  &:hover {
-    @apply ;
-  }
 }

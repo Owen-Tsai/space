@@ -1,0 +1,13 @@
+.item {
+  h2 {
+    @apply text-lg border-spacing-2;
+  }
+}
+
+.item-name {
+  @apply font-bold text-gray-800 dark:text-gray-100;
+}
+
+.item-desc {
+  @apply text-gray-500 dark:text-gray-400 relative;
+}

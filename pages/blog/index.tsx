@@ -64,12 +64,12 @@ export default function Blog({ posts, images }: Props) {
           <title>Blog | Space</title>
         </Head>
         <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
-          <div className={styles.page}>
-            <main className={styles.main}>
+          <main className={styles.page}>
+            <section className={styles.main}>
               <h1 style={font.style}>ARTICLES</h1>
-              <section className={styles.list}>
+              <div className={styles.list}>
                 <Page posts={postsOnPage} />
-              </section>
+              </div>
               {
                 posts.length > 1 &&
                 <div className={styles.pagination}>
@@ -82,11 +82,11 @@ export default function Blog({ posts, images }: Props) {
                   </button>
                 </div>
               }
-            </main>
-            <aside className={styles.aside}>
+            </section>
+            <section className={styles.aside}>
               <div className={styles.gallery}>
                 <h1 style={font.style}>GALLERY</h1>
-                <section className={styles.carousel}>
+                <div className={styles.carousel}>
                   <Swiper
                     modules={[Navigation]}
                     loop
@@ -107,10 +107,10 @@ export default function Blog({ posts, images }: Props) {
                       <ArrowRight />
                     </button>
                   </div>
-                </section>
+                </div>
               </div>
-            </aside>
-          </div>
+            </section>
+          </main>
         </Layout>
       </Transition>
     </>
