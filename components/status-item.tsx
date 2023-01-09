@@ -3,6 +3,7 @@ import gameIcon from '@assets/app/game.png'
 import workIcon from '@assets/app/work.png'
 import bookIcon from '@assets/app/book.png'
 import Image from 'next/image'
+import { m } from 'framer-motion'
 
 type Item = {
   name: string
@@ -33,10 +34,19 @@ export default function StatusItem ({ items, type }: Props) {
       </div>
       <ul>
         {
-          items.map((item) => (
-            <li key={item.name} className={styles.li}>
-              <div className={styles['item-name']}>{item.name}</div>
-              <div className={styles['item-desc']}>{item.desc}</div>
+          items.map((item, i) => (
+            <li
+              key={item.name}
+              className='overflow-hidden'
+            >
+              <m.div
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.45 }}
+              >
+                <div className={styles['item-name']}>{item.name}</div>
+                <div className={styles['item-desc']}>{item.desc}</div>
+              </m.div>
             </li>
           ))
         }

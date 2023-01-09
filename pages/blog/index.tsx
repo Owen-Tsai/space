@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Layout from '@layouts/default-layout'
-import { Abril_Fatface } from '@next/font/google'
 import { getAllPosts, getAllGalleryImages } from '@lib/api'
 import Page from '@comps/post-page'
 import GalleryItem from '@comps/gallery-item'
@@ -9,17 +8,14 @@ import { Navigation } from 'swiper'
 import { ArrowLeft, ArrowRight } from 'react-feather'
 import Transition from '@layouts/index'
 import { useState } from 'react'
+import AnimatedText from '@comps/animated-text'
+import { m } from 'framer-motion'
 
 import type { Blog, GalleryItem as GalleryListItem } from '@tds/blog'
 
 import styles from '@css/blog.module.css'
 import 'swiper/css'
 import 'swiper/css/navigation'
-
-const font = Abril_Fatface({
-  weight: '400',
-  subsets: ['latin']
-})
 
 type Props = {
   posts: Partial<Blog>[][],
@@ -66,7 +62,9 @@ export default function Blog({ posts, images }: Props) {
         <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
           <main className={styles.page}>
             <section className={styles.main}>
-              <h1 style={font.style}>ARTICLES</h1>
+              <h1>
+                <AnimatedText text='ARTICLES' />
+              </h1>
               <div className={styles.list}>
                 <Page posts={postsOnPage} />
               </div>
@@ -85,8 +83,20 @@ export default function Blog({ posts, images }: Props) {
             </section>
             <section className={styles.aside}>
               <div className={styles.gallery}>
-                <h1 style={font.style}>GALLERY</h1>
-                <div className={styles.carousel}>
+                <h1>
+                  <AnimatedText text='GALLERY' />
+                </h1>
+                <m.div
+                  className={styles.carousel}
+                  initial={{ x: '50%', opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{
+                    type: 'spring',
+                    damping: 24,
+                    stiffness: 140,
+                    duration: 1
+                  }}
+                >
                   <Swiper
                     modules={[Navigation]}
                     loop
@@ -107,7 +117,7 @@ export default function Blog({ posts, images }: Props) {
                       <ArrowRight />
                     </button>
                   </div>
-                </div>
+                </m.div>
               </div>
             </section>
           </main>

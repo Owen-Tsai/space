@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { Abril_Fatface } from '@next/font/google'
 import { useTheme } from 'next-themes'
 import cn from 'classnames'
 import Header from '@comps/header'
@@ -8,12 +7,7 @@ import { useState, useEffect } from 'react'
 import styles from '@css/home.module.css'
 import { Heart } from 'react-feather'
 import Transition from '@layouts/index'
-import { m } from 'framer-motion'
-
-const displayFont = Abril_Fatface({
-  weight: ['400'],
-  subsets: ['latin']
-})
+import AnimatedText from '@comps/animated-text'
 
 export default function Home() {
   const { theme } = useTheme()
@@ -46,19 +40,14 @@ export default function Home() {
           <Header />
           <main className={styles.main}>
             <div className={styles.container}>
-              <m.h1
-                style={displayFont.style}
-                initial={{ y: -24, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ type: 'tween', duration: 0.8, delay: 0.5 }}
-              >
-                Yet Another
+              <h1>
+                <AnimatedText text='Yet&nbsp;Another' />
                 <br />
-                Web
+                <AnimatedText text='Web' />
                 <br className='lg:hidden' />
                 <span className='hidden lg:inline'>&nbsp;</span>
-                Developer.
-              </m.h1>
+                <AnimatedText text='Developer.' />
+              </h1>
             </div>
             <footer className={styles.footer}>
               <div className='flex items-center'>
