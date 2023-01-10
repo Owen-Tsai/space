@@ -1,0 +1,22 @@
+.nav {
+  @apply text-lg text-gray-400 dark:text-gray-500;
+
+  li {
+    @apply my-1;
+  }
+}
+
+.depth-2 {
+  a {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+}
+.depth-3 {
+  @apply pl-8;
+}
+.depth-4 {
+  @apply pl-12;
+}
+.depth-5 {
+  @apply pl-16;
+}

@@ -1,9 +1,8 @@
 .alert {
   @apply border rounded px-6 py-3 border-l-4 my-4 text-lg;
-}
-
-.alert p {
-  @apply my-0;
+  p, ul, ol {
+    @apply my-0 #{!important};
+  }
 }
 
 .alert-normal {

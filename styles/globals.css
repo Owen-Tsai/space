@@ -27,22 +27,6 @@ body {
   @apply relative z-0;
 }
 
-.story-toc-aside nav {
-  @apply text-lg text-gray-400 dark:text-gray-500;
-}
-
-.story-toc-aside .toc-level-2 {
-  @apply pl-8;
-}
-
-.story-toc-aside .toc-item {
-  @apply my-1;
-}
-
-.story-toc-aside .toc-link-h2 {
-  @apply text-gray-600 dark:text-gray-300;
-}
-
 [data-rmiz-modal-overlay="visible"] {
   @apply bg-slate-100 dark:bg-slate-900;
 }

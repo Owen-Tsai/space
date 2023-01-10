@@ -1,46 +1,21 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
-import { useEffect, createRef } from 'react'
 import Layout from '@layouts/default-layout'
 import Transition from '@layouts/index'
-import { serialize } from 'next-mdx-remote/serialize'
 import { getPostBySlug, getPostSlugs } from '@lib/api'
 import { m, type AnimationProps } from 'framer-motion'
+import Toc from '@comps/toc'
 import Article from '@comps/article'
-import rehypeHighlight from 'rehype-highlight'
-import rehypeToc from '@jsdevtools/rehype-toc'
-import rehypeSlug from 'rehype-slug'
-import rehypeHeadings from 'rehype-autolink-headings'
-import remarkUnwrapImages from 'remark-unwrap-images'
-import remarkGfm from 'remark-gfm'
 import styles from '@css/blog-content.module.css'
-
-import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import type { Blog } from '@tds/blog'
 
 type RouteParam = {
   slug: string
 }
 
-type Props = {
-  content: MDXRemoteSerializeResult,
-  date: string,
-  title: string,
-  slug: string
-}
-
-export default function Story({ content, date, title, slug }: Props) {
+export default function Story({ content, date, title, slug, toc }: Blog) {
   const router = useRouter()
-
-  const aside = createRef<HTMLElement>()
-
-  useEffect(() => {
-    if (aside.current?.querySelector('nav') === null) {
-      const renderedToc = document.querySelector('article > nav')
-      const toc = renderedToc?.cloneNode(true)
-      toc && aside.current?.appendChild(toc)
-    }
-  })
 
   if (!router.isFallback && !slug) {
     return <ErrorPage statusCode={404} />
@@ -77,12 +52,7 @@ export default function Story({ content, date, title, slug }: Props) {
             <Article content={content} />
           </main>
           <aside className={`${styles.aside} story-toc-aside`}>
-            <m.section
-              ref={aside}
-              initial={{ x: 24, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ ...transitionProps, delay: 1.5 }}
-            ></m.section>
+            <Toc toc={toc!} />
           </aside>
         </div>
       </Layout>
@@ -106,36 +76,15 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps = async ({ params }: { params: RouteParam }) => {
-  const { content, date, title, slug } = getPostBySlug(params.slug, [
-    'content',
-    'date',
-    'title',
-    'slug'
-  ])
-
-  const mdxSource = await serialize(content || '**no content in this file**', {
-    mdxOptions: {
-      development: false,
-      remarkPlugins: [
-        remarkUnwrapImages,
-        remarkGfm
-      ],
-      rehypePlugins: [
-        rehypeHighlight,
-        rehypeSlug,
-        rehypeHeadings,
-        rehypeToc,
-      ],
-      format: 'mdx',
-    },
-  })
+  const { content, date, title, slug, toc } = await getPostBySlug(params.slug, true)
 
   return {
     props: {
-      content: mdxSource,
+      content,
       date,
       title,
-      slug
+      slug,
+      toc
     }
   }
 }

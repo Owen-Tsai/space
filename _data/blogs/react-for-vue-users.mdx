@@ -1,0 +1,123 @@
+---
+title: Vue 用户的 React 入门
+date: 2023.01.09
+---
+
+React 是目前构建中、大型 Web 应用的首选框架之一。通过对 React 官方文档和入门教程的学习，可以从中发现许多 Vue 借鉴或参考设计的要素。对于先从 Vue 入手的开发者而言，在学习 React 的过程中随时在两个框架之间建立联系、思考实现方式和设计的异同点是掌握 React 的一种好的方式。
+
+本文从一些概念出发，谈论 Vue 和 React 这两个 context 中实现上的区别和联系。
+
+## 组件
+
+Vue 和 React 都通过从文件导出对象来定义一个组件，也都通过将组件 UI 和逻辑相关代码放在同一个文件中来实现 **[关注点分离](https://en.wikipedia.org/wiki/Separation_of_concerns)**。
+
+### 渲染
+
+Vue 引入了单文件组件（SFC），允许用户使用扩展名为`.vue`的文件编写组件。其中，`<template>`标签的内容会被 Vue 的 SFC 编译器编译为 AST，并依据 AST 中的结构调用渲染方法，最终渲染整个页面。
+
+React 中没有引入单独的文件类型和语法解析器。在 React 中，JSX 是编写用户界面和逻辑的方式。Babel 负责将 JSX 编译为渲染方法。JSX 看上去和“模板语言”十分类似，但 JSX 实际上表征 JavaScript 对象，具备 JavaScript 的一切能力。
+
+并不是说 React 必须通过 JSX 才能够使用。但如果不借助 JSX，在 React 内就要直接编写渲染语句来告知程序用户界面的结构。渲染语句与 JavaScript DOM API 中创建元素等很像，区别是可以额外支持创建 React 组件。
+
+此外，对于元素的循环渲染和条件渲染，Vue 利用单文件组件中的`v-for`和`v-if/v-show`指令实现。React 由于使用 JSX 进行编码，因此可以完全通过 JavaScript 原生的循环和条件分支结构实现相同的需求。
+
+<Alert>
+当然，Vue 中也可以直接通过调用渲染函数来完成用户界面的创建，亦可以编写 JSX。
+</Alert>
+
+### 创建组件 & Props
+
+在 React 中，组件的形式分为**类组件**和**函数组件**。类组件自`React.Component`类派生，包含若必须实现的`render`方法和其他可选的生命周期方法。创建组件的过程就像所有面向对象编程语言中要做的一样：声明私有的属性、在构造函数中执行超类的构造函数和一系列初始化方法、实现额外的方法和必须的渲染方法；函数组件则具有更加精简的结构和编写方式，函数的参数即 Props，函数的返回值即合法的、用以创建 UI 的 JSX 片段。
+
+<Alert>
+- 一般来说在大多数场景下，使用函数组件更加方便，能够覆盖常见的用例；但函数组件没有实例，对于需要获取组件实例的情况 *（例如通过`ref`）*则无法通过函数组件实现。
+- 虽然函数组件内没有像类组件那样提供可选实现的生命周期方法，但是可以通过 hooks 实现相同的功能。
+</Alert>
+
+```jsx
+// 类组件
+class Alert extends React.Component {
+  constructor (props) {
+    super()
+  }
+
+  render() {
+    return (
+      <div className={`alert alert--${props.type}`}>
+        {props.children}
+      </div>
+    )
+  }
+}
+
+// 函数组件
+function Alert ({ children, type }) {
+  return (
+    <div className={`alert alert--${type}`}>
+      {children}
+    </div>
+  )
+}
+```
+
+```jsx
+// 使用
+import Alert from 'xxx.jsx'
+
+<Alert type='default'>Hello World</Alert>
+```
+
+在使用组件时，我们使用了与“向 HTML 标签上添加属性”类似的方式向组件传递 prop。这在 Vue 中也是常见的。可以看到取代 Vue 中 slot 特性的 React 概念是一个名为`children`的特殊 prop。当需要允许组件可以插入指定的内容时，指定的内容可以在组件内通过`props.children`访问到。
+
+### 状态、计算属性与副作用
+
+很多组件具有局部的、属于组件本身的状态。在 Vue 中，组件的状态一般通过`ref/creative`和`computed`定义。通过`ref/creative`定义的状态具备响应性，会触发 UI 的局部渲染（如果 UI 中包含依赖于该状态的部分）；而`computed`则用于定义依赖于其他状态的状态，例如官方文档中给出的客户姓名依赖于`firstName`和`lastName`。
+
+考虑下面的代码片段：
+
+```html
+<!-- vue -->
+<template>
+  <input v-model="firstName">
+  <input v-model="lastName">
+  <p>{{ userName }}</p>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const firstName = ref('John')
+const lastName = ref('Doe')
+
+const userName = computed(() => (
+  `${firstName.value} ${lastName.value}`
+))
+</script>
+```
+
+当用户更新`<input>`的值时，与输入框绑定的状态也将实时更新，进而触发依赖于该状态的计算属性更新，进而触发 UI 中的局部重新渲染。这项特性也就是大家熟知的“双向绑定（2-way binding）”，允许在两个实体之间建立状态的同步。
+
+而 React 的设计理念（暂时）决定了 React 并不会实现双向数据绑定的特性（虽然可以利用第三方封装实现）。React 中的渲染函数会在`props`或`state`变化时自动执行，仅此而已。想要实现上面例子中藉由用户的 I/O 行为触发状态的改变，往往需要在输入框等元素上使用原生`onChange`事件，并编写事件回调函数来更新状态。
+
+```jsx
+export default function Greetings () {
+  const [firstName, setFirstName] = useState('John')
+  const [lastName, setLastName] = useState('Doe')
+
+  return (
+    <>
+      <input value={firstName} onChange={(e) => setFirstName(e.target.value)}>
+      <input value={lastName} onChange={(e) => setLastName(e.target.value)}>
+      <p>{`${firstName} ${lastName}`}</p>
+    </>
+  )
+}
+```
+
+### Hook 和 Composition API
+
+### Context 和 依赖注入
+
+## 应用样式
+
+## 

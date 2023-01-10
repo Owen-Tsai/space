@@ -1,6 +1,6 @@
-import { MDXRemote } from 'next-mdx-remote'
-import styles from '@css/article.module.css'
-import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import { useMemo } from 'react'
+import { getMDXComponent } from 'mdx-bundler/client'
+import styles from '@css/article.module.scss'
 import { JetBrains_Mono } from '@next/font/google'
 import { m } from 'framer-motion'
 
@@ -19,8 +19,9 @@ const components = {
 }
 
 export default function Article(
-  { content }: { content: MDXRemoteSerializeResult }
+  { content }: { content: string }
 ) {
+  const Component = useMemo(() => getMDXComponent(content), [content])
   return (
     <>
       <style jsx global>{`
@@ -35,7 +36,7 @@ export default function Article(
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: 'tween', duration: 0.5, delay: 1.2 }}
       >
-        <MDXRemote {...content} components={components} />
+        <Component components={components} />
       </m.article>
     </>
   )

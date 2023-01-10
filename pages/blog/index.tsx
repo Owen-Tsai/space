@@ -23,7 +23,7 @@ type Props = {
 }
 
 export const getStaticProps = async () => {
-  const posts = getAllPosts()
+  const posts = await getAllPosts()
   const images = getAllGalleryImages()
 
   return {
