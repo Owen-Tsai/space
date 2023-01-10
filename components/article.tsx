@@ -3,6 +3,7 @@ import { getMDXComponent } from 'mdx-bundler/client'
 import styles from '@css/article.module.scss'
 import { JetBrains_Mono } from '@next/font/google'
 import { m } from 'framer-motion'
+import Link from './exposed/link'
 
 const codeFont = JetBrains_Mono({
   weight: ['500']
@@ -15,6 +16,7 @@ import 'react-medium-image-zoom/dist/styles.css'
 const components = {
   // eslint-disable-next-line @next/next/no-img-element
   img: (props: any) => <Zoom><img {...props} alt={props.alt} /></Zoom>,
+  a: (props: any) => <Link href={props.href}>{props.children}</Link>,
   Alert
 }
 
