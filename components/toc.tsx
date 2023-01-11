@@ -1,9 +1,18 @@
 import type { TOC } from '@tds/blog'
 import styles from '@css/toc.module.scss'
+import { m } from 'framer-motion'
 
 export default function Toc ({ toc }: { toc: TOC }) {
   return (
-    <nav className={styles.nav}>
+    <m.nav
+      className={styles.nav}
+      initial={{ x: 24, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{
+        duration: 0.25,
+        delay: 1
+      }}
+    >
       <ul>
         {
           toc && toc.map((entry) => (
@@ -13,6 +22,6 @@ export default function Toc ({ toc }: { toc: TOC }) {
           ))
         }
       </ul>
-    </nav>
+    </m.nav>
   )
 }

@@ -7,11 +7,7 @@ React 是目前构建中、大型 Web 应用的首选框架之一。通过对 Re
 
 本文从一些概念出发，谈论 Vue 和 React 这两个 context 中实现上的区别和联系。
 
-## 组件
-
-Vue 和 React 都通过从文件导出对象来定义一个组件，也都通过将组件 UI 和逻辑相关代码放在同一个文件中来实现 **[关注点分离](https://en.wikipedia.org/wiki/Separation_of_concerns)**。
-
-### 渲染
+## 渲染
 
 Vue 引入了单文件组件（SFC），允许用户使用扩展名为`.vue`的文件编写组件。其中，`<template>`标签的内容会被 Vue 的 SFC 编译器编译为 AST，并依据 AST 中的结构调用渲染方法，最终渲染整个页面。
 
@@ -25,7 +21,7 @@ React 中没有引入单独的文件类型和语法解析器。在 React 中，J
 当然，Vue 中也可以直接通过调用渲染函数来完成用户界面的创建，亦可以编写 JSX。
 </Alert>
 
-### 创建组件 & Props
+## 创建组件 & Props
 
 在 React 中，组件的形式分为**类组件**和**函数组件**。类组件自`React.Component`类派生，包含若必须实现的`render`方法和其他可选的生命周期方法。创建组件的过程就像所有面向对象编程语言中要做的一样：声明私有的属性、在构造函数中执行超类的构造函数和一系列初始化方法、实现额外的方法和必须的渲染方法；函数组件则具有更加精简的结构和编写方式，函数的参数即 Props，函数的返回值即合法的、用以创建 UI 的 JSX 片段。
 
@@ -69,7 +65,7 @@ import Alert from 'xxx.jsx'
 
 在使用组件时，我们使用了与“向 HTML 标签上添加属性”类似的方式向组件传递 prop。这在 Vue 中也是常见的。可以看到取代 Vue 中 slot 特性的 React 概念是一个名为`children`的特殊 prop。当需要允许组件可以插入指定的内容时，指定的内容可以在组件内通过`props.children`访问到。
 
-### 状态、计算属性与副作用
+## 状态与计算属性
 
 很多组件具有局部的、属于组件本身的状态。在 Vue 中，组件的状态一般通过`ref/creative`和`computed`定义。通过`ref/creative`定义的状态具备响应性，会触发 UI 的局部渲染（如果 UI 中包含依赖于该状态的部分）；而`computed`则用于定义依赖于其他状态的状态，例如官方文档中给出的客户姓名依赖于`firstName`和`lastName`。
 
@@ -106,18 +102,172 @@ export default function Greetings () {
 
   return (
     <>
-      <input value={firstName} onChange={(e) => setFirstName(e.target.value)}>
-      <input value={lastName} onChange={(e) => setLastName(e.target.value)}>
+      <input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+      <input value={lastName} onChange={(e) => setLastName(e.target.value)} />
       <p>{`${firstName} ${lastName}`}</p>
     </>
   )
 }
 ```
 
-### Hook 和 Composition API
+<Alert type='error' title='注意'>
+如果使用类组件，那么直接修改组件的状态`this.state.xx = newValue`不会重新执行`render`方法；对状态的更新必须通过调用`this.setState`方法实现。
+</Alert>
 
-### Context 和 依赖注入
+## 副作用
 
-## 应用样式
+在 Vue 中，计算属性的引入可以很方便地实现基于状态的值的自动更新。但在特定情况下，当状态变更时开发者希望执行一些副作用，例如，当状态改变时操作 DOM，或是发送一个异步请求并更新另一个状态。
 
-## 
+Vue 和 React 针对这种情况都具有相应的解决方案。Vue 允许使用侦听器侦听状态的变更，来执行一个副作用回调方法。而 React 提供了`useEffect` hook。
+
+更确切地说，`useEffect`具备了 Vue 中的`watch`和`watchEffect`的能力。`useEffect`可以接受第二个参数，来指定当哪些依赖的状态变更时重新执行回调，例如下面的代码中每次组件渲染，都会对比`variable1`和`variable2`是否和前一次渲染时的值相同，如果是的话则跳过本次`useEffect`回调的执行。
+
+```ts
+useEffect(() => {
+  // some side effects
+}, [variable1, variable2])
+```
+
+在 React 中状态的更新触发组件的重新渲染，组件渲染后会调用`useEffect`。`useEffect`可以看作是类组件中`componentDidMount`，`componentWillUnmount`和`componentDidUpdate`的结合。而 Vue 组件的重新渲染依据是虚拟 DOM 是否改变（因此可以通过重新设置`key`来触发组件重新渲染）。虽然能够用类似的代码实现类似的功能，但两者在设计思想上具有很大的差异。
+
+<Alert>
+之所以有这样的设计差异是故意为之的，因为从本质上来说 React 是视图层解决方案，因此本身不关注数据层的行为。当与第三方库一同使用时，才可能成为像 Vue 一样的 MVVM 框架。
+</Alert>
+
+## Context 和 依赖注入
+
+在开发中时常会遇到组件 props 透传的需求，将顶层组件的状态通过 props 一层一层传递到子孙组件中使用。为了避免层层传递，Vue 提供了 provide/inject 的解决方案，称为“依赖注入”。在创建一个组件库时，依赖注入对于将表单状态（例如`size`）注入到所有表单组件中十分有用。
+
+React 也提供了类似的实现方式，即与 context 相关的 API。在祖先组件中，通过`createContext` API 来创建一个 context。每一个创建的 context 对象都包含一个`Context.Provider`组件，该组件接收一个名为`value`的 prop，并传递给组件树上的一个或若干个消费组件。每当`value`的值变化时，所有消费组件都将重新渲染。
+
+```jsx
+const TestContext = React.createContext('defaultVal')
+
+class Parent extends React.Component {
+  constructor () {
+    super()
+    this.state = {
+      locale: 'zh-CN'
+    }
+  }
+  render () {
+    <TestContext value={this.state.locale}>
+      <Child />
+    </TestContext>
+  }
+}
+
+class Child extends React.Component {
+  static contextType = TestContext
+
+  render () {
+    return <SomeComponent locale={this.context} />
+  }
+}
+
+// 在函数式组件中消费 context 时需要借助 <Context.Consumer> 组件
+
+function Child () {
+  return (
+    <TestContext.Consumer>
+      {(value) => (
+        <SomeComponent locale={value.locale} />
+      )}
+    </TestContext.Consumer>
+  )
+}
+```
+
+## Mixins
+
+Vue 和 React 在设计的层面上一大共同之处都是试图通过 mixins 解决逻辑复用的问题，但在不久之后也都发现了 mixins 本身引入的新问题。
+
+<Alert title='扩展链接'>
+- [Mixins Considered Harmful](https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html);
+- Composition API [和 Mixin 的对比](https://cn.vuejs.org/guide/reusability/composables.html#comparisons-with-other-techniques)
+</Alert>
+
+总的来说，使用 mixins 带来的问题包含以下几点:
+
+- **引入了隐式依赖**。在以文件作为划分单元以实现关注点分离的框架中，mixins 会带来隐式依赖。一个组件内调用的方法可能来自某一个 mixin ，甚至某一个 mixin 的 mixin；反过来说，一个 mixin 也可能调用组件组件内的某一个方法。在这两类情况下对代码的维护变得异常复杂。
+- **命名空间冲突**。来自不同作者的 mixin 可能导致名称的冲突，而此类冲突在使用 mixins 的情况下并不好提前发现。
+- **数据源不唯一**。组件和 mixin 都可能包含数据源，这使得追溯错误和理解组件的行为变得困难。
+
+在 Vue 中我们使用 composition API 来解决这样的问题，在 React 中方案则是通过 HOC（Higher Order Component，高阶组件）。
+
+<Alert>也有其他方式可以实现逻辑复用，例如 [render props](https://reactjs.org/docs/render-props.html) 或 [hooks](https://reactjs.org/docs/hooks-intro.html#its-hard-to-reuse-stateful-logic-between-components)。</Alert>
+
+HOC 定义了一种“包裹”组件的方式，在 HOC 中接收一个组件并返回一个组件。接收的组件是可能共享某些状态和特性的组件，返回的组件则是包含了共享状态与特性的组件。
+
+假设我们从若干个组件中抽出一个共同的逻辑：这些组件包含一个隐藏的计数状态，每次点击组件时都将计数器的值增加 1。同时，这些组件都包含一个额外的`<p>`标签，用于显示当前计数器的值。这个例子在现实中几乎完全不会用到，但作为示例来说足够简单。
+
+在不考虑复用时，这样的组件很好实现：
+
+```jsx
+function CounterButton () {
+  const [count, setCount] = useState(0)
+
+  return (
+    <>
+      <button onClick={() => setCount(count + 1)}>Click Me</button>
+      <p>{count}</p>
+    </>
+  )
+}
+
+function CounterDiv () {
+  const [count, setCount] = useState(0)
+
+  return (
+    <>
+      <div onClick={() => setCount(count + 1)}>Click Me</div>
+      <p>{count}</p>
+    </>
+  )
+}
+```
+
+使用 HOC 进行重构，则需要改变组件的结构，将共享的逻辑提升到用于包裹组件的 HOC 中。
+
+```jsx
+function CounterWrapper (WrappedComponent) {
+  return function Wrapper () {
+    const [count, setCount] = useState(123)
+
+    return (
+      <>
+        <WrappedComponent onClick={() => setCount(count + 1)} />
+        <p>{count}</p>
+      </>
+    )
+  }
+}
+
+function CounterButton = CounterWrapper(({ onClick }) => (
+  <button onClick={onClick}>Click Me</button>
+))
+
+function CounterDiv = CounterWrapper(({ onClick }) => (
+  <div onClick={onClick}>Click Me</div>
+))
+```
+
+值得一提的是，因为`WrappedComponent`组件并非原生 DOM 元素，因此在该组件上绑定的`onClick`仅被视为一个 prop。在被包裹的组件中，接收 props 中的`onClick`，并将该 prop 传递给真正执行事件监听的 DOM 元素上才能使点击事件生效。
+
+<Alert title='注意'>
+HOC 的使用包含了一些[约定](https://reactjs.org/docs/higher-order-components.html)。阅读这些约定以掌握使用 HOC 的最佳实践。
+</Alert>
+
+## Hook
+
+React 16.8 提出了 hook 的概念。Hook 主要为了解决以下三个问题：
+
+- 组件之间难以复用状态逻辑 *（[上文](#mixins)也提到了如何在组件间复用逻辑代码的其他方案，但在大多数场景下使用 hooks 就足以实现需求）*；
+- 组件生命周期的不同阶段包含大量相关代码，而同一阶段内包含大量无关逻辑。这背离了关注点分离的初衷 *（Vue 在探讨[为什么要有组合式 API](https://cn.vuejs.org/guide/extras/composition-api-faq.html#why-composition-api)时也提到了相同的问题）*；
+- React 组件一直以来都更像函数，学习`class`语法也为研究 React 造成了障碍。
+
+从目的层面来看，Vue 中的 composition API 和 React 里的 hook 很大程度上都是为了解决相同的问题，也因此 Vue 的 composition API 从 React hook 中吸取了经验和教训。虽然如此，两者的设计理念和心智模型仍然存在重要的区别。其中一点就是，React 的 hook 是无副作用的纯函数，而一个 Vue 组合式函数则是基于 Vue 的响应式特性的。其次，React 组件的更新会重新注册 hook 并执行 hook 方法，但在 Vue 的`setup`中代码只执行一次。
+
+React 从根本上看更贴近于 JavaScript 本身，因此对很多功能特性的实现具有更高的自由度，允许开发者定制策略。但缺乏相应的封装和抽象意味着在 React 中需要开发者人为约定和控制很多细节。例如使用 ESLint 规则确保可以传递正确的依赖数组、使用`useMemo` hook 以期减少昂贵运算对性能的影响等等很多开发者在 React 项目中随时随地都在关注程序运行的性能，由此带来了额外的心智负担。
+
+但从整体上来说，React hook 的引入是具有创造性的。很多 Vue 的项目中开始使用“具有 React 风格的”hook，更有包括 [VueUse](https://vueuse.org/) 在内的出色开源组合式函数工具库。
