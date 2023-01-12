@@ -1,6 +1,10 @@
 /* styles for html tags */
 .story {
-  @apply text-xl leading-9 text-gray-700 dark:text-gray-300;
+  @apply text-xl leading-9 text-gray-700;
+}
+
+:global(.dark) .story {
+  @apply text-gray-300;
 }
 
 .story p {
@@ -13,26 +17,38 @@
 
 /* inline code */
 .story :not(pre) > code {
-  @apply bg-gray-200 px-2 py-1 dark:bg-gray-800 text-lg;
+  @apply px-2 py-1 text-lg;
 }
 
 .story pre {
-  @apply overflow-x-auto w-full bg-gray-200 text-lg leading-6 my-4;
+  @apply overflow-x-auto w-full text-lg leading-6 my-4;
 }
 
 .story del {
-  @apply mx-1 text-gray-400 dark:text-gray-500;
+  @apply mx-1 text-gray-400
+}
+
+:global(.dark) .story del {
+  @apply text-gray-600;
 }
 
 .story a {
-  @apply text-blue-600 hover:border-b-2 border-blue-600 dark:border-blue-400 dark:text-blue-400;
+  @apply text-blue-600 hover:border-b-2 border-blue-600;
+}
+
+:global(.dark) .story a {
+  @apply border-blue-400 text-blue-400;
 }
 
 .story blockquote {
-  @apply relative text-gray-500 px-6 py-4 bg-gray-100 dark:bg-gray-800 border-l-4 border-gray-300 dark:border-gray-600;
+  @apply relative text-gray-500 px-6 py-4 bg-gray-100 border-l-4 border-gray-300;
   p, ul, ol {
     @apply my-0;
   }
+}
+
+:global(.dark) .story blockquote {
+  @apply bg-gray-800 border-gray-600;
 }
 
 .story ul:not(.contains-task-list) {

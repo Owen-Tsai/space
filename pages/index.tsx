@@ -29,7 +29,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         <style>{`
-          html, body {
+          body {
             padding: 0;
             margin: 0;
           }
@@ -53,7 +53,7 @@ export default function Home() {
               <div className='flex items-center'>
                 Created with
                 <Heart color='rgb(234,85,74)' size='18' fill='rgb(234,85,74)' className='mx-2' />
-                by <Link href='https://www.github.com/Owen-Tsai/' className='ml-1 font-bold'>Owen</Link>
+                by <Link href='https://www.github.com/Owen-Tsai/' target='_blank' className='ml-1 font-bold'>Owen</Link>
               </div>
             </footer>
           </main>

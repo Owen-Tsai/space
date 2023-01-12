@@ -37,12 +37,20 @@ export const getAllPosts = async () => {
   const pageSize = 8
   const slugs = getPostSlugs()
   const res: Partial<Blog>[][] = []
+  const posts: Partial<Blog>[] = []
+
+  for (let i = 0; i < slugs.length; i++) {
+    posts.push(await getPostBySlug(slugs[i]))
+  }
+  posts.sort((a, b) => 
+    (new Date(b.date!) as any) - (new Date(a.date!) as any)
+  )
+
   for (let i = 0; i < Math.ceil(slugs.length / pageSize); i++) {
-    const remains = slugs.length - i * pageSize
+    const remains = posts.length - i * pageSize
     const page: Partial<Blog>[] = []
     for (let j = i * pageSize; j < Math.min(remains + pageSize * i, pageSize * (i + 1)); j++) {
-      const slug = slugs[j]
-      page.push(await getPostBySlug(slug))
+      page.push(posts[j])
     }
 
     res.push(page)

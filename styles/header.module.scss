@@ -1,10 +1,18 @@
 .header-main {
-  @apply border-b-2 flex-shrink-0 border-gray-800 dark:border-gray-50 px-6 py-2 flex items-stretch justify-between
+  @apply border-b-2 flex-shrink-0 border-gray-800 px-6 py-2 flex items-stretch justify-between
   lg:px-0 lg:py-0;
 }
 
+:global(.dark) .header-main {
+  @apply border-gray-100;
+}
+
 .logo-wrapper {
-  @apply w-16 lg:w-36 lg:h-16 lg:flex lg:items-center lg:justify-center lg:border-r-2 border-gray-800 dark:border-gray-50;
+  @apply w-16 lg:w-36 lg:h-16 lg:flex lg:items-center lg:justify-center lg:border-r-2 border-gray-800;
+}
+
+:global(.dark) .logo-wrapper {
+  @apply border-gray-100;
 }
 
 .logo-wrapper img {
@@ -12,11 +20,19 @@
 }
 
 .toolbar {
-  @apply hidden lg:block border-b-2 border-gray-800 dark:border-gray-50 pl-[142px];
+  @apply hidden lg:block border-b-2 border-gray-800 pl-[142px];
+}
+
+:global(.dark) .toolbar {
+  @apply border-gray-100;
 }
 
 .toolbar > div {
-  @apply border-l-2 border-gray-800 dark:border-gray-50;
+  @apply border-l-2 border-gray-800;
+}
+
+:global(.dark) .toolbar > div {
+  @apply border-gray-100;
 }
 
 .navs {
@@ -24,5 +40,9 @@
 }
 
 .navs > a {
-  @apply text-lg font-bold text-gray-800 dark:text-gray-50 flex items-end;
+  @apply text-lg font-bold text-gray-800 flex items-end;
+}
+
+:global(.dark) .navs > a {
+  @apply text-gray-100;
 }

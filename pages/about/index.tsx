@@ -6,6 +6,7 @@ import StatusItem from '@/comps/status-item'
 import AnimatedText from '@/comps/animated-text'
 import Transition from '@/layouts/index'
 import { m } from 'framer-motion'
+import { GitHub, Mail } from 'react-feather'
 
 export default function About () {
   const transitionStates = {
@@ -67,6 +68,21 @@ export default function About () {
               >
                 I&apos;m currently employed, but constantly seeking for new challenges. Shoot an email if you want.
               </m.p>
+              <m.div
+                initial={transitionStates.hidden}
+                animate={transitionStates.visible}
+                transition={transitionProps(4)}
+                className='flex items-center justify-between'
+              >
+                <a className='flex items-center' href='mailto:owentsai.v@gmail.com'>
+                  <Mail strokeWidth={1.5} size={20} className='mr-2' />
+                  Email
+                </a>
+                <a className='flex items-center' href='https://github.com/Owen-Tsai' target='_blank' rel='noreferrer'>
+                  <GitHub strokeWidth={1.5} size={20} className='mr-2' />
+                  Github
+                </a>
+              </m.div>
             </section>
           </main>
         </Layout>

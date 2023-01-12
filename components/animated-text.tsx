@@ -1,9 +1,10 @@
-import { m, LazyMotion, domAnimation } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Abril_Fatface } from '@next/font/google'
 
 const displayFont = Abril_Fatface({
   weight: ['400'],
-  subsets: ['latin']
+  subsets: ['latin'],
+  display: 'swap'
 })
 
 export default function AnimatedText (
@@ -45,7 +46,7 @@ export default function AnimatedText (
         chars.map((char, idx) => (
           <m.span
             key={idx}
-            style={{ display: 'inline-block', ...displayFont.style }}
+            style={{ display: 'inline-block' }}
             variants={variants}
           >{char}</m.span>
         ))

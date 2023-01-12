@@ -1,20 +1,36 @@
 .page {
-  @apply relative flex flex-col lg:flex-row lg:pl-[142px] bg-gray-50 dark:bg-gray-900;
+  @apply relative flex flex-col lg:flex-row lg:pl-[142px] bg-gray-50;
+}
+
+:global(.dark) .page {
+  @apply bg-gray-900;
 }
 
 .main {
-  @apply lg:border-l-2 px-6 border-gray-800 dark:border-gray-100 w-full lg:w-2/3 lg:pb-8;
+  @apply lg:border-l-2 px-6 border-gray-800 w-full lg:w-2/3 lg:pb-8;
+}
+
+:global(.dark) .main {
+  @apply border-gray-100;
 }
 
 .main > h1 {
   padding: 12vh 0;
-  @apply text-6xl lg:text-7xl text-gray-800 dark:text-gray-100;
+  @apply text-6xl lg:text-7xl text-gray-800;
+}
+
+:global(.dark) .main > h1 {
+  @apply text-gray-100;
 }
 
 .aside {
   height: calc(100vh - var(--header-height));
   top: var(--header-height);
-  @apply w-full lg:w-1/3 lg:border-l-2 border-gray-800 dark:border-gray-100 sticky right-0 overflow-hidden;
+  @apply w-full lg:w-1/3 lg:border-l-2 border-gray-800 sticky right-0 overflow-hidden;
+}
+
+:global(.dark) .aside {
+  @apply border-gray-100;
 }
 
 .gallery {
@@ -23,7 +39,11 @@
 
 .gallery > h1 {
   padding: 12vh 0;
-  @apply text-6xl lg:text-7xl text-gray-800 dark:text-gray-100;
+  @apply text-6xl lg:text-7xl text-gray-800;
+}
+
+:global(.dark) .gallery > h1 {
+  @apply text-gray-100;
 }
 
 .gallery-actions {
@@ -32,7 +52,12 @@
 
 .gallery-actions > button,
 .pagination > button {
-  @apply inline-flex items-center justify-center text-gray-800 dark:text-gray-200 p-1;
+  @apply inline-flex items-center justify-center text-gray-800 p-1;
+}
+
+:global(.dark) .gallery-actions > button,
+:global(.dark) .pagination > button {
+  @apply text-gray-200;
 }
 
 .gallery-actions svg,

@@ -7,7 +7,8 @@ import Link from './exposed/link'
 
 const codeFont = JetBrains_Mono({
   weight: ['500'],
-  subsets: ['latin']
+  subsets: ['latin'],
+  display: 'swap'
 })
 
 import Zoom from 'react-medium-image-zoom'

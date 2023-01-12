@@ -10,7 +10,11 @@
   background-size: 120%;
   background-position-y: bottom; 
   background-position-x: -5vw;
-  @apply h-screen bg-no-repeat flex flex-col bg-gray-50 dark:bg-gray-900;
+  @apply h-screen bg-no-repeat flex flex-col bg-gray-50;
+}
+
+:global(.dark) .page {
+  @apply bg-gray-900;
 }
 
 @media screen and (min-width: 1024px) {
@@ -27,18 +31,28 @@
 }
 
 .container {
-  @apply border-gray-800 dark:border-gray-50
-  lg:border-l-2 lg:ml-[142px] lg:flex-grow pt-[20vh] lg:pt-[12vh];
+  @apply border-gray-800 lg:border-l-2 lg:ml-[142px] lg:flex-grow pt-[20vh] lg:pt-[12vh];
+}
+
+:global(.dark) .container {
+  @apply border-gray-100;
 }
 
 .container > h1 {
-  @apply text-5xl font-bold leading-tight relative text-gray-800 dark:text-gray-50
+  @apply text-5xl font-bold leading-tight relative text-gray-800
   lg:text-8xl lg:pl-6;
 }
 
+:global(.dark) .container h1 {
+  @apply text-gray-100;
+}
+
 .actions {
-  @apply px-6 flex items-center justify-between border-y-2 border-gray-800 dark:border-gray-50
-  lg:hidden;
+  @apply px-6 flex items-center justify-between border-y-2 border-gray-800 lg:hidden;
+}
+
+:global(.dark) .actions {
+  @apply border-gray-100;
 }
 
 .actions > a {
@@ -46,11 +60,19 @@
 }
 
 .footer {
-  @apply hidden lg:block border-t-2 border-gray-800 dark:border-gray-50 pl-[142px];
+  @apply hidden lg:block border-t-2 border-gray-800 pl-[142px];
+}
+
+:global(.dark) .footer {
+  @apply border-gray-100;
 }
 
 .footer > div {
-  @apply pb-7 pt-1 pl-6 border-l-2 border-gray-800 dark:border-gray-50;
+  @apply pb-7 pt-1 pl-6 border-l-2 border-gray-800
+}
+
+:global(.dark) .footer > div {
+  @apply border-gray-100;
 }
 
 .footer > div > a {

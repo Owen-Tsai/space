@@ -1,16 +1,32 @@
 .card {
-  @apply border border-gray-300 dark:border-gray-700 px-6 py-4 min-h-[220px] duration-200
+  @apply border border-gray-300 px-6 py-4 min-h-[220px] duration-200
   flex flex-col justify-between rounded;
 }
 
+:global(.dark) .card {
+  @apply border-gray-700;
+}
+
 .card:hover {
-  @apply border-gray-800 dark:border-gray-300;
+  @apply border-gray-800;
+}
+
+:global(.dark) .card:hover {
+  @apply border-gray-300;
 }
 
 .card > h2 {
-  @apply text-3xl text-gray-800 dark:text-gray-50;
+  @apply text-3xl text-gray-800;
+}
+
+:global(.dark) .card > h2 {
+  @apply text-gray-50;
 }
 
 .card > span {
   @apply text-lg text-gray-400;
+}
+
+:global(.dark) .card > span {
+  @apply text-gray-600;
 }
