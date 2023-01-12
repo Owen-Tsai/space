@@ -26,10 +26,10 @@ export default function About () {
 
   return (
     <>
+      <Head>
+        <title>About | Space</title>
+      </Head>
       <Transition>
-        <Head>
-          <title>About | Space</title>
-        </Head>
         <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
           <main className={styles.page}>
             <section className={styles['status-wrapper']}>

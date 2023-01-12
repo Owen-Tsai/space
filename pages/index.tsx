@@ -23,19 +23,19 @@ export default function Home() {
 
   return (
     <>
-      <Transition>
-        <Head>
-          <title>Space</title>
-          <meta name="description" content="Yet another web debeloper's blog" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-          <style>{`
-            html, body {
-              padding: 0;
-              margin: 0;
-            }
+      <Head>
+        <title>Space</title>
+        <meta name="description" content="Yet another web debeloper's blog" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+        <style>{`
+          html, body {
+            padding: 0;
+            margin: 0;
+          }
           `}</style>
-        </Head>
+      </Head>
+      <Transition>
         <div className={cn(styles.page, themeClsName)}>
           <Header />
           <main className={styles.main}>

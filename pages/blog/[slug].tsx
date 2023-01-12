@@ -30,33 +30,35 @@ export default function Story({ content, date, title, slug, toc }: Blog) {
   }
 
   return (
-    <Transition>
-      <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
-        <Head>
-          <title>{titleMeta}</title>
-        </Head>
-        <div className={styles.page}>
-          <main className={styles.main}>
-            <div className={styles.title}>
-              <m.h1
-                initial={{ y: -24, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={transitionProps}
-              >{title}</m.h1>
-              <m.span
-                initial={{ y: 24, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ ...transitionProps, delay: 0.8 }}
-              >{date}</m.span>
-            </div>
-            <Article content={content} />
-          </main>
-          <aside className={`${styles.aside} story-toc-aside`}>
-            <Toc toc={toc!} />
-          </aside>
-        </div>
-      </Layout>
-    </Transition>
+    <>
+      <Head>
+        <title>{titleMeta}</title>
+      </Head>
+      <Transition>
+        <Layout headerCls='sticky top-0 bg-gray-50 dark:bg-gray-900 z-50'>
+          <div className={styles.page}>
+            <main className={styles.main}>
+              <div className={styles.title}>
+                <m.h1
+                  initial={{ y: -24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={transitionProps}
+                >{title}</m.h1>
+                <m.span
+                  initial={{ y: 24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ ...transitionProps, delay: 0.8 }}
+                >{date}</m.span>
+              </div>
+              <Article content={content} />
+            </main>
+            <aside className={`${styles.aside} story-toc-aside`}>
+              <Toc toc={toc!} />
+            </aside>
+          </div>
+        </Layout>
+      </Transition>
+    </>
   )
 }
 

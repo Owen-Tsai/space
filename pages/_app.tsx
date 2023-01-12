@@ -28,11 +28,11 @@ export default function App({ Component, pageProps }: AppProps) {
   if (!mounted) return null
 
   return (
-    <AnimatePresence mode='wait' initial={true}>
-      <ThemeProvider attribute='class' defaultTheme='light' key={route}>
-        <Component {...pageProps} />
+    <ThemeProvider attribute='class' defaultTheme='light' key={route}>
+        <AnimatePresence mode='wait' initial={true}>
+          <Component {...pageProps} />
+        </AnimatePresence>
         <Cursor />
       </ThemeProvider>
-    </AnimatePresence>
   )
 }
