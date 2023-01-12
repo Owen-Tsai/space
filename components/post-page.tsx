@@ -1,4 +1,4 @@
-import { Blog } from '@tds/blog'
+import { Blog } from '@/tds/blog'
 import BlogCard from './blog-card'
 import { m } from 'framer-motion'
 

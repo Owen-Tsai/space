@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { bundleMDX } from 'mdx-bundler'
-import type { TOC } from '@tds/blog'
+import type { TOC } from '@/tds/blog'
 
 // remark plugins
 import remarkGfm from 'remark-gfm'

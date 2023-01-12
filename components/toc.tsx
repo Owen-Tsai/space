@@ -1,5 +1,5 @@
-import type { TOC } from '@tds/blog'
-import styles from '@css/toc.module.scss'
+import type { TOC } from '@/tds/blog'
+import styles from '@/styles/toc.module.scss'
 import { m } from 'framer-motion'
 
 export default function Toc ({ toc }: { toc: TOC }) {

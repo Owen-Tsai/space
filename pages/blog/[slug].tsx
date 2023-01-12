@@ -1,14 +1,14 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
-import Layout from '@layouts/default-layout'
-import Transition from '@layouts/index'
-import { getPostBySlug, getPostSlugs } from '@lib/api'
+import Layout from '@/layouts/default-layout'
+import Transition from '@/layouts/index'
+import { getPostBySlug, getPostSlugs } from '@/lib/api'
 import { m, type AnimationProps } from 'framer-motion'
-import Toc from '@comps/toc'
-import Article from '@comps/article'
-import styles from '@css/blog-content.module.css'
-import type { Blog } from '@tds/blog'
+import Toc from '@/comps/toc'
+import Article from '@/comps/article'
+import styles from '@/styles/blog-content.module.css'
+import type { Blog } from '@/tds/blog'
 
 type RouteParam = {
   slug: string

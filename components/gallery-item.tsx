@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
-import type { GalleryItem } from '@tds/blog'
+import type { GalleryItem } from '@/tds/blog'
 import 'react-medium-image-zoom/dist/styles.css'
 
 export default function GalleryItem(props: GalleryItem) {

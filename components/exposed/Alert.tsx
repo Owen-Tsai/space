@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import styles from '@css/alert.module.scss'
+import styles from '@/styles/alert.module.scss'
 
 export default function Alert(
   { children, title, type = 'normal' }: {

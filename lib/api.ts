@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { join } from 'path'
 import galleryItems from '../_data/gallery/index.json'
-import type { Blog, GalleryItem } from '@tds/blog'
+import type { Blog, GalleryItem } from '@/tds/blog'
 import parseMDXFile from './mdx'
 
 const postDir = join(process.cwd(), '_data/blogs')

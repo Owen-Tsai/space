@@ -1,11 +1,11 @@
 /**
  * default layout is used in all pages except index
  */
-import Header from '@comps/header'
+import Header from '@/comps/header'
 import Link from 'next/link'
 import { ArrowUpLeft } from 'react-feather'
 import { useRouter } from 'next/router'
-import type { Props } from '@tds/layout'
+import type { Props } from '@/tds/layout'
 
 export default function Layout(
   { children, headerCls }: Props

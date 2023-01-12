@@ -1,7 +1,7 @@
-import styles from '@css/status-item.module.scss'
-import gameIcon from '@assets/app/game.png'
-import workIcon from '@assets/app/work.png'
-import bookIcon from '@assets/app/book.png'
+import styles from '@/styles/status-item.module.scss'
+import gameIcon from '@/assets/app/game.png'
+import workIcon from '@/assets/app/work.png'
+import bookIcon from '@/assets/app/book.png'
 import Image from 'next/image'
 import { m } from 'framer-motion'
 

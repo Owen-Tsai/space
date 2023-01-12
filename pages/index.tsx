@@ -2,12 +2,12 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import cn from 'classnames'
-import Header from '@comps/header'
+import Header from '@/comps/header'
 import { useState, useEffect } from 'react'
-import styles from '@css/home.module.scss'
 import { Heart } from 'react-feather'
-import Transition from '@layouts/index'
-import AnimatedText from '@comps/animated-text'
+import Transition from '@/layouts/index'
+import AnimatedText from '@/comps/animated-text'
+import styles from '@/styles/Home.module.css'
 
 export default function Home() {
   const { theme } = useTheme()

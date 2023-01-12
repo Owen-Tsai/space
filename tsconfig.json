@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -15,12 +16,12 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@comps/*": ["./components/*"],
-      "@tds/*": ["./types/*"],
-      "@css/*": ["./styles/*"],
-      "@lib/*": ["./lib/*"],
-      "@layouts/*": ["./layouts/*"],
-      "@assets/*": ["./public/assets/*"]
+      "@/comps/*": ["components/*"],
+      "@/tds/*": ["types/*"],
+      "@/styles/*": ["styles/*"],
+      "@/lib/*": ["lib/*"],
+      "@/layouts/*": ["layouts/*"],
+      "@/assets/*": ["public/assets/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

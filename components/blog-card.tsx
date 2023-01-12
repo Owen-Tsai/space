@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import type { Blog } from'@tds/blog'
-import styles from '@css/blog-card.module.css'
+import type { Blog } from'@/tds/blog'
+import styles from '@/styles/blog-card.module.css'
 
 export default function BlogCard(props: Partial<Blog>) {
   if (!props.slug) {

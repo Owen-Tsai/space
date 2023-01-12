@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import Layout from '@layouts/default-layout'
-import styles from '@css/about.module.scss'
+import Layout from '@/layouts/default-layout'
+import styles from '@/styles/about.module.scss'
 import status from '../../_data/status/index.json'
-import StatusItem from '@comps/status-item'
-import AnimatedText from '@comps/animated-text'
-import Transition from '@layouts/index'
+import StatusItem from '@/comps/status-item'
+import AnimatedText from '@/comps/animated-text'
+import Transition from '@/layouts/index'
 import { m } from 'framer-motion'
 
 export default function About () {

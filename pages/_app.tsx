@@ -5,8 +5,8 @@ import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import '@css/code-highlight.scss'
-import '@css/cursor.scss'
+import '@/styles/code-highlight.scss'
+import '@/styles/cursor.scss'
 
 const Cursor = dynamic(() => import('../components/cursor'), {
   ssr: false

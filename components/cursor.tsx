@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { m, LazyMotion, domAnimation } from 'framer-motion'
-import { isMobileDevice } from '@lib/utils'
+import { isMobileDevice } from '@/lib/utils'
 
 export default function Cursor () {
   const [position, setPos] = useState({

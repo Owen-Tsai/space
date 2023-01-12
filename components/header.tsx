@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import logo from '@assets/app/logo.svg'
-import logoWhite from '@assets/app/logo-white.svg'
-import styles from '@css/header.module.scss'
+import logo from '@/assets/app/logo.svg'
+import logoWhite from '@/assets/app/logo-white.svg'
+import styles from '@/styles/header.module.scss'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import ThemeSwitch from './theme-switch'
-import type { Props } from '@tds/header'
+import type { Props } from '@/tds/header'
 
 export default function Header(props: Props) {
   const [mounted, setMounted] = useState(false)

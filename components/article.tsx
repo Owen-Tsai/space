@@ -1,12 +1,13 @@
 import { useMemo } from 'react'
 import { getMDXComponent } from 'mdx-bundler/client'
-import styles from '@css/article.module.scss'
+import styles from '@/styles/article.module.scss'
 import { JetBrains_Mono } from '@next/font/google'
 import { m } from 'framer-motion'
 import Link from './exposed/link'
 
 const codeFont = JetBrains_Mono({
-  weight: ['500']
+  weight: ['500'],
+  subsets: ['latin']
 })
 
 import Zoom from 'react-medium-image-zoom'

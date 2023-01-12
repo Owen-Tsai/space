@@ -12,9 +12,7 @@ const nextConfig = {
         // Iterate over each of the loaders
         loaders.use.forEach(l => {
           // Only focus on loaders that are an object and have a `loader` property set to `css-loader`
-          if(typeof l !== 'string' && typeof l.loader === 'string' && /(?<!post)css-loader/.test(l.loader)) {
-            // If there are no module options originally set, skip this loader
-            if(!l.options.modules || l.options.isFontLoader) return;
+          if(typeof l !== 'string' && typeof l.loader === 'string' && /(?<!post)css-loader/.test(l.loader) && l.options.modules && l.options.isFontLoader) {
             const { getLocalIdent, ...others } = l.options.modules;
 
             // Create a new options object with the `getLocalIdent` property set to a function
