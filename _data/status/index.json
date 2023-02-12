@@ -1,19 +1,19 @@
 {
   "play": [
     {
+      "name": "《Hogwarts Legacy》"
+    },
+    {
       "name": "《审判之眼：死神的遗言 Remastered》"
     },
     {
       "name": "《Personal 4 Golden》"
     },
-    {
-      "name": "《Hitman III》"
-    }
   ],
   "reading": [
     {
-      "name": "《谁杀了她》",
-      "desc": "作者：东野圭吾"
+      "name": "“馆”系列",
+      "desc": "作者：绫辻行人"
     }
   ],
   "creating": [
@@ -22,8 +22,8 @@
       "desc": "A vue3 component library"
     },
     {
-      "name": "XT Admin",
-      "desc": "Front-end solution for application developing"
+      "name": "Arco Form Builder",
+      "desc": "Visualized form designer/renderer based on arco-design"
     }
   ]
 }
