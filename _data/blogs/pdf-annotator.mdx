@@ -1,0 +1,254 @@
+---
+title: PDF 预览与标注功能的探索
+date: 2023.04.20
+---
+
+当遇到需要在线预览 PDF 文档的业务场景时，所选用的方案往往是使用 [pdf.js](https://mozilla.github.io/pdf.js/) 提供的 viewer。但当需要实现诸如在线签章、标注等简单的编辑功能时，可能就需要使用 pdf.js 提供的低级 API 自行实现一个满足业务需求的 viewer。
+
+![PDF预览与标注工具界面](/assets/blog/20230420/img1.png)
+
+## 整体结构
+
+让我们假设一个 PDF 预览与标注工具应当包含以下的功能：
+
+- 可以打开和预览 PDF 文档；
+- 可以实现 PDF 预览常见的功能（例如自适应缩放、缩放、旋转、文本搜索、保存与打印、翻页等）；
+- 可以添加自定义文字；
+- 可以绘制矩形或其他简单形状。
+
+显然我们可以将整个项目大体划分为渲染和动作两部分。渲染部分利用 pdf.js 的 API 将 PDF 文档渲染到 DOM 节点中，动作部分负责监听用户对指定元素的交互事件并执行相应的动作。
+
+对于向 PDF 文档中添加图形或文字的需求，可以使用 [fabric.js](http://fabricjs.com/)。Fabric.js 是一个 Canvas 库，可以方便地实现在 Canvas 元素上的绘制操作。对于生成 PDF 的需求，可以使用 [jsPDF](https://www.npmjs.com/package/jspdf)。该库可以创建 PDF 文档，在本案例中我们将渲染部分生成的 canvas 与用户标注所在的 canvas 合并后，以图片的形式添加到使用 jsPDF 创建的 PDF 文档中，并进行后续的保存或打印等操作。
+
+## 状态管理
+
+对于在项目中通用的状态，简单建立几个单独的对象负责进行状态管理。
+
+<Alert type="error" title="关于状态管理">
+本例将所有状态简化为一个可被全局存取的对象的属性，不过仍然建议在复杂的项目中采用更专业的状态管理模式以规避可能出现的错误。
+</Alert>
+
+```js
+const pdfStates = {
+  pdfDoc: null,           // pdf.js 文档实例
+  totalPages: 0,          // 总页码数
+  scale: 1,               // 当前缩放比例
+  pages: [],              // pdf.js 页实例
+  orientation: 'p',       // 文档朝向（portrait/landscape）
+  rotation: 0,            // 文档旋转角度
+}
+
+const uiStates = {
+  paintMode: false,       // 是否处于绘制状态
+  selectMode: false,      // 是否处于文字选择状态
+  searchMode: false,      // 是否处于文本搜索状态
+  canvasInstances: [],    // fabric 画布实例
+}
+
+const uiElements = {
+  actPaint: document.querySelector('#act-paint'),
+  // ...其他 UI 元素
+}
+```
+
+## 渲染逻辑
+
+在渲染 PDF 文档时，pdf.js 会渲染指定页面到 canvas 元素中。在本例中我们需要获取 PDF 文档中的文本，因此需要调用 pdf.js 的`renderTextContent()`方法额外渲染 PDF 所包含的文本信息。同时，为了能够使用户可以在 PDF 文档上增加标注，需要单独准备第三个 canvas 元素用于实例化 fabric.js 画布。综上所述，对于 PDF 文档中的一个页面，需要 2 个 canvas 元素以及一个用于渲染文字的容器元素。
+
+下图展示了渲染后的结果：
+
+![每一个 PDF 页面选然后所包含的 DOM 元素](/assets/blog/20230420/img2.png)
+
+其中，`document-wrapper`元素是整个 PDF 文档预览区域的容器。它的`style`属性包含一个与 PDF 当前缩放比例相同的 CSS 变量`--scale-factor`。这个 CSS 变量用于计算当用户主动缩放文档时，每一页文档的宽度和高度应当是多少。
+
+`page-wrapper`元素是每一个 PDF 文档页的容器。`canvas-wrapper`中的 canvas 元素是 pdf.js 用于渲染 PDF 页面内容的画布（“渲染画布”）。`annotation-layer`中的第一个 canvas 元素与渲染画布尺寸相同，用于传入 fabric.js 的构造函数中生成用于标注的第二个画布（`.upper-canvas`）。`text-layer`则是 PDF 中包含的文本。
+
+### 自适应缩放和清晰化处理
+
+在使用 pdf.js 的`pdf.renderPage(renderContext)`方法渲染文档中的页面时，如果没有在`renderContext`参数中传入`transform`属性，很容易发现渲染出来的图像过于模糊，对于尺寸较小的文件来说模糊现象尤为严重；而传入固定的`transform`属性，又会使得部分尺寸过大的 PDF 文档无法成功渲染 *（无法查明具体原因，似乎与浏览器和尺寸均有关系。降低 transform 的值被证实对此问题有帮助）*。因此，要对 PDF 渲染结果进行清晰化处理，首先要做的是动态传入一个`transform`属性给`renderContext`参数。
+
+```js
+const defaultResolution = 4
+let resolution = defaultResolution
+
+// 获取容器宽度的 60%（portrait）或 90%（landscape）作为适宜宽度
+const getDesiredWidth = () => {
+  const factor = pdfStates.orientation === 'p' ? 0.6 : 0.9
+  return factor * uiElements.viewerWrapper.getBoundingClientRect().width
+}
+
+const setResolution = (width) => {
+  const desiredWidth = getDesiredWidth()
+  pdfStates.scale = desiredWidth / width
+  uiElements.viewerWrapper.style = `--scale-factor: ${pdfStates.scale}`
+
+  if (width > desiredWidth) {
+    resolution = 1
+  }
+}
+
+// 渲染参数
+page.render({
+  viewport,
+  rotation: pdfStates.rotation,
+  transform: [resolution, 0, 0, resolution, 0, 0]
+})
+```
+
+在上面的代码中，首先根据 PDF 文档的版式（水平或垂直）计算一个适宜的宽度，将该宽度作为目标宽度计算一个初始状态下的缩放比例，自动将 PDF 文档缩放到该比例。同时，如果文档本身的宽度`width`大于适宜的宽度，说明原 PDF 文档的尺寸渲染出来后已经足够清晰，我们不再通过`transform`属性放大渲染。
+
+需要注意的是，通过指定`transform`的方式将 PDF 页面放大渲染时，其对应的 viewport 的宽度和高度都会被等比例放大。如需维持页面的宽度和高度则需要将用于渲染页面的 canvas 元素的`style`设置为`width: 100%; height: 100%`，使其与父元素的大小相等；在其父元素`page-wrapper`上，通过前文提到的利用 CSS 变量的方式来设置当前页面的大小。
+
+### 字体渲染
+
+pdf.js 可以解析 PDF 文档中的文本并通过`pdfjs.renderTextLayer`方法渲染文档中的文本对象。渲染出来的文本是一系列包含样式的 HTML 节点，如下图所示。
+
+![pdf.js 渲染出的文字节点](/assets/blog/20230420/img3.png)
+
+可以看到渲染出来的文字节点包含样式`left, top, font-size`等，因此将其父元素设置为`position: absolute`是显然且必要的。当 PDF 文档进行缩放后，由于借助`--scale-factor`变量，无需重新渲染文本就可直接改变元素的字号。
+
+## 动作逻辑
+
+动作逻辑部分的带多数代码内容都是监听 UI 元素的用户事件，从而执行对应的方法，例如对 PDF 文档的缩放、旋转，以及对文档中指定关键字的查找等。
+
+### 缩放
+
+在本例的背景下，缩放需要考虑用户已经添加的标注和文本对象，并且需要改变元素的宽度与高度。渲染画布的大小可以通过 CSS 变量自行调节，标注画布则需要重新计算正确的尺寸后调用 fabric.js 的画布实例方法`setWidth`与`setHeight`进行设置；更改完画布尺寸后，通过`getObjects`方法获取当前页面渲染画布上所有的对象，并等比例放大或者缩小。
+
+```js
+const scale = (factor) => {
+  pdfStates.scale += factor
+  uiElements.viewerWrapper.style = `--scale-factor: ${pdfStates.scale}`
+
+  uiStates.canvasInstances.forEach((canvas, idx) => {
+    const viewport = pdfStates.pages[idx].getViewport({
+      scale: 1,
+      rotation: pdfStates.rotation
+    })
+    const { width, height } = viewport
+    const newWidth = pdfStates.scale * width
+    scaleObjectsOnCanvas(canvas, newWidth)
+    canvas.setWidth(newWidth)
+    canvas.setHeight(pdfStates.scale * height)
+  })
+}
+
+const scaleObjectsOnCanvas = (canvas, newWidth) => {
+  const multiplier = newWidth / canvas.width
+  canvas.getObjects().forEach((obj) => {
+    obj.scaleX = obj.scaleX * multiplier
+    obj.scaleY = obj.scaleY * multiplier
+    obj.left = obj.left * multiplier
+    obj.top = obj.top * multiplier
+    obj.setCoords() // 重新绘制鼠标控制区域和锚点
+  })
+}
+```
+
+### 旋转
+
+对于旋转来说，由于旋转的角度总为 ±90°，处理相对简单。每次旋转需要重新获取页面的 viewport，传入新的旋转角度参数`rotation`，然后将新的`viewport.width`和`viewport.height`赋给各页面元素；同时，考虑到用户已经添加的标注和文本对象，除了将该对象旋转相同的角度外，还需根据旋转方向的不同重新设置该对象的坐标位置。
+
+```js
+// 将第 pageNum 页面旋转 angle 角度
+const rotatePage = (pageNum, angle) => {
+  pdfStates.rotation += angle
+  const page = pdfStates.pages[pageNum - 1]
+  const viewport = page.getViewport({
+    scale: 1,
+    rotation: pdfStates.rotation
+  })
+
+  // 旋转后的宽度和高度，实际上相当于宽高与旋转前交换了，直接将原宽度赋值给新高度也可
+  const { width, height } = viewport
+
+  // 重新设置页面元素的尺寸，细节省略
+  pageWrapper.style.width = `calc(var(--scale-factor) * ${width}px)`
+  pageWrapper.style.height = `calc(var(--scale-factor) * ${height}px)`
+  annotationWrapper.style.width = `calc(var(--scale-factor) * ${width}px)`
+  annotationWrapper.style.height = `calc(var(--scale-factor) * ${height}px)`
+  canvas.width = width * resolution
+  canvas.height = height * resolution
+
+  // 重新渲染页面
+  page.render({
+    viewport,
+    canvasContext: canvas.getContext('2d'),
+    transform: [resolution, 0, 0, resolution, 0, 0],
+  })
+
+  // 旋转该页面标注画布的全部对象
+  rotateObjectsOnCanvas(uiStates.canvasInstances[pageNum - 1], angle)
+}
+
+const rotateObjectsOnCanvas = (canvas, angle) => {
+  // 交换标注画布的高度与宽度
+  const h = canvas.getHeight()
+  const w = canvas.getWidth()
+  canvas.setDimensions({
+    width: h,
+    height: w
+  })
+  
+  canvas.getObjects().forEach((obj) => {
+    const angle = obj.angle + angle
+    obj.angle = angle
+
+    const posval = {
+      top: obj.top,
+      left: obj.left
+    }
+
+    let newTop, newLeft
+
+    if (angle < 0) {
+      newLeft = posval.top
+      newTop = canvas.height - posval.left
+    } else {
+      newTop = posval.left
+      newLeft = canvas.width - posval.top 
+    }
+
+    obj.top = newTop
+    obj.left = newLeft
+    obj.setCoords()
+  })
+}
+```
+
+在`rotateObjectsOnCanvas`方法中，假设当前页面向左逆时针旋转 90°，那么某一个页面上的标注对象到页面左侧的距离等于旋转前该对象到页面上端的距离；该对象到页面上侧的距离等于页面的原宽度（旋转后的高度）与该对象到页面左侧的距离之差。据此可以写出页面向左、右两个不同方向旋转时的坐标处理方法。
+
+### 查找和搜索关键字
+
+在渲染逻辑完成对文字层的渲染后，就可以允许用户输入关键字并查找文档中每一次出现该关键字的地方了。搜索和高亮的功能通过 [mark.js](https://markjs.io/) 实现。
+
+```js
+const marker = new Mark(document.querySelectorAll('.text-layer'))
+
+const highlightText = (text) => {
+  pdfStates.markInstance.mark(text, {
+    done: function() {
+      uiStates.searchOccurrences = document.querySelectorAll('mark')
+      uiStates.searchCurrentIndex = 0
+      jumpToOccurrence()
+    }
+  })
+}
+
+// 跳到第 currentOcr 个匹配处
+const jumpToOccurrence = (currentOcr) => {
+  if (uiStates.searchOccurrences.length > 0) {
+    const currentOcr = uiStates.searchOccurrences[uiStates.searchCurrentIndex]
+    uiStates.searchOccurrences.forEach((e) => {
+      e.classList.remove('current')
+    })
+    if (currentOcr) {
+      currentOcr.classList.add('current')
+      currentOcr.scrollIntoView()
+    }
+  }
+}
+
+// 取消高亮
+marker.unmark()
+```
