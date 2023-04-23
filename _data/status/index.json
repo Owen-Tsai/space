@@ -1,19 +1,19 @@
 {
   "play": [
     {
-      "name": "《审判之眼：死神的遗言 Remastered》"
+      "name": "《Hogwarts Legacy》"
     },
     {
-      "name": "《Personal 4 Golden》"
+      "name": "《Atomic Heart》"
     },
     {
-      "name": "《Hitman III》"
+      "name": "《卧龙：苍天陨落》"
     }
   ],
   "reading": [
     {
-      "name": "《谁杀了她》",
-      "desc": "作者：东野圭吾"
+      "name": "《岛田庄司精选作品合集》",
+      "desc": "作者：显然是岛田庄司"
     }
   ],
   "creating": [
@@ -22,8 +22,8 @@
       "desc": "A vue3 component library"
     },
     {
-      "name": "XT Admin",
-      "desc": "Front-end solution for application developing"
+      "name": "Arco Form Builder",
+      "desc": "Visualized form designer/renderer based on arco-design"
     }
   ]
 }
