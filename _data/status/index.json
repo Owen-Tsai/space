@@ -1,7 +1,7 @@
 {
   "play": [
     {
-      "name": "《Baldur's Gate 3》"
+      "name": "《Lies of P》"
     },
     {
       "name": "《Starfield》"
@@ -12,8 +12,8 @@
   ],
   "reading": [
     {
-      "name": "《岛田庄司精选作品合集》",
-      "desc": "作者：岛田庄司 (Obviously)"
+      "name": "《人类灭绝》",
+      "desc": "作者：高野和明"
     }
   ],
   "creating": [
@@ -22,8 +22,8 @@
       "desc": "A vue3 component library"
     },
     {
-      "name": "Arco Form Builder",
-      "desc": "Visualized form designer/renderer based on arco-design"
-    },
+      "name": "Envision",
+      "desc": "A LCDP with opinionated features"
+    }
   ]
 }
