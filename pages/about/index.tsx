@@ -52,21 +52,21 @@ export default function About () {
                 animate={transitionStates.visible}
                 transition={transitionProps(1)}
               >
-                Hi there. I&apos;m Owen, a web developer with focusing on front-end techniques.
+                Hi there! I&apos;m Owen, a web developer with focusing on front-end techniques.
               </m.p>
               <m.p
                 initial={transitionStates.hidden}
                 animate={transitionStates.visible}
                 transition={transitionProps(2)}
               >
-                Outside coding, I play video games a lot. My collection covers almost all genres of games from the famous triple A titles to the indie ones. I even helped with Chinese localization work for some indie dev teams.
+                Outside of coding, I spend a lot of time playing video games. My collection spans almost all genres, from famous triple-A titles to indie gems. I have even contributed to Chinese localization efforts for some indie development teams.
               </m.p>
               <m.p
                 initial={transitionStates.hidden}
                 animate={transitionStates.visible}
                 transition={transitionProps(3)}
               >
-                I&apos;m currently employed, but constantly seeking for new challenges. Shoot an email if you want.
+                I am currently employed but am always seeking new challenges. Feel free to shoot me an email if you're interested.
               </m.p>
               <m.div
                 initial={transitionStates.hidden}
