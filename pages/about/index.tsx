@@ -66,7 +66,7 @@ export default function About () {
                 animate={transitionStates.visible}
                 transition={transitionProps(3)}
               >
-                I am currently employed but am always seeking new challenges. Feel free to shoot me an email if you're interested.
+                I am currently employed but am always seeking new challenges. Feel free to shoot me an email if you are interested.
               </m.p>
               <m.div
                 initial={transitionStates.hidden}
