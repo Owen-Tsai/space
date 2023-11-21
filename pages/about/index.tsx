@@ -52,7 +52,7 @@ export default function About () {
                 animate={transitionStates.visible}
                 transition={transitionProps(1)}
               >
-                Hi there! I&apos;m Owen, a web developer with focusing on front-end techniques.
+                Hi there! I am Owen, a web developer with focusing on front-end techniques.
               </m.p>
               <m.p
                 initial={transitionStates.hidden}
