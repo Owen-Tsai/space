@@ -1,0 +1,29 @@
+@use './var.scss' as *;
+@use './font.scss' as *;
+
+body {
+  font-family: 'font';
+  padding: 0;
+  margin: 0;
+  background:
+    url('~/assets/img/noise.svg') center no-repeat,
+    var(--color-bg);
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  color: var(--color-text);
+  ::selection {
+    background-color: var(--color-red);
+  }
+  cursor: none;
+  overflow: hidden;
+}
+
+#__nuxt {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}

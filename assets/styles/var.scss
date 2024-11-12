@@ -1,0 +1,10 @@
+html {
+  --color-bg: #feedeb;
+  --color-text: #030712;
+  --color-red: #fb3706;
+}
+
+html.dark {
+  --color-bg: #030712;
+  --color-text: #f9fafb;
+}

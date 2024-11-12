@@ -1,0 +1,39 @@
+@font-face {
+  font-family: 'font';
+  src: url(../fonts/f_Regular.woff2) format('woff2');
+  font-weight: 100 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'font';
+  src: url(../fonts/f_Bold.woff2) format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'font';
+  src: url(../fonts/f_Black.woff2) format('woff2');
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'font-mono';
+  src: url(../fonts/GeistMonoVF.woff) format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'font-sans';
+  src: url(../fonts/GeistVF.woff) format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
