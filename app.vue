@@ -1,6 +1,6 @@
 <template>
   <div class="page h-full w-full overflow-hidden relative">
-    <div class="nav flex items-center justify-between z-10">
+    <div class="nav flex items-center justify-between z-10 relative">
       <NuxtLink class="link" to="/">Home</NuxtLink>
       <NuxtLink class="link" to="/projects">Projects</NuxtLink>
       <NuxtLink class="link" to="/blog">Blog</NuxtLink>
@@ -54,4 +54,3 @@
   }
 }
 </style>
-
