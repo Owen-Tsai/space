@@ -6,7 +6,7 @@
 import { gsap } from 'gsap'
 
 const cursor = useTemplateRef('cursor')
-const { fullPath } = useRoute()
+const route = useRoute()
 const interactivables = ref<NodeListOf<HTMLElement>>()
 
 let updateCursor: (e: MouseEvent) => void
@@ -23,26 +23,31 @@ onMounted(() => {
     yTo(e.clientY)
   }
 
-  zoomCursor = gsap.to(cursor.value, {
-    scale: 5,
-    paused: true,
-    duration: 0.2,
-    ease: 'power4'
-  })
+  zoomCursor = gsap.fromTo(
+    cursor.value,
+    { scale: 1 },
+    {
+      scale: 6,
+      paused: true,
+      duration: 0.3,
+      ease: 'back.inOut'
+    }
+  )
 
   window.addEventListener('mousemove', updateCursor)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('mousemove', updateCursor)
+  gsap.killTweensOf(cursor.value)
 })
 
 watch(
-  () => fullPath,
+  () => route.fullPath,
   () => {
     nextTick(() => {
+      zoomCursor.reverse()
       interactivables.value = document.querySelectorAll('a, button')
-      console.log(interactivables.value)
       interactivables.value.forEach((el) => {
         el.addEventListener('mouseenter', () => {
           zoomCursor.play()
@@ -59,7 +64,7 @@ watch(
 
 <style lang="scss" scoped>
 .cursor {
-  position: absolute;
+  position: fixed;
   background-color: #fff;
   border-radius: 50%;
   height: clamp(1vw, 1rem, 2rem);
