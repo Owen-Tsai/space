@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-svgo',
     '@vueuse/motion/nuxt',
-    '@nuxt/icon'
+    '@nuxt/icon',
+    '@nuxt/image'
   ],
   css: ['~/assets/styles/reset.scss', '~/assets/styles/global.scss'],
   fonts: {

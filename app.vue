@@ -9,7 +9,16 @@
 
     <Cursor />
 
+    <Blob blur="120px" color="#FB3706" size="50vw" animated class="-left-1/9 top-2/3" />
     <Blob blur="1600px" color="#FB3706" size="120vh" class="-right-1/3 top-1/2 -translate-y-1/2" />
+
+    <div class="footer flex items-center justify-between">
+      <div>&copy; {{ new Date().getFullYear() }}</div>
+      <div>
+        <ThemeSwitch />
+      </div>
+      <div></div>
+    </div>
   </div>
 </template>
 
@@ -52,5 +61,13 @@
   .page {
     filter: brightness(0.86);
   }
+}
+.footer {
+  position: absolute;
+  bottom: clamp(2rem, 64px, 2vw);
+  width: 100%;
+  border-bottom: 1px solid var(--color-text);
+  overflow: hidden;
+  z-index: 0;
 }
 </style>

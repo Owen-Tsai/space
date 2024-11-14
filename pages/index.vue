@@ -1,6 +1,5 @@
 <template>
   <div class="view overflow-hidden">
-    <div></div>
     <div class="title">
       <div>yet</div>
       <div>another</div>
@@ -22,15 +21,8 @@
       </div>
     </div>
 
-    <div class="footer flex items-center justify-between">
-      <div>&copy; {{ new Date().getFullYear() }}</div>
-      <div>
-        <ThemeSwitch />
-      </div>
-      <div></div>
-    </div>
     <!-- <div class="sider"></div> -->
-    <div class="hidden xl:block intro absolute bottom-0 right-0">
+    <div class="hidden xl:block intro absolute bottom-2vh right-0">
       <p class="text-right">
         Hi, I'm
         <span class="name">Owen</span>
@@ -44,8 +36,6 @@
       <p class="text-right">I also love immersing myself in the worlds created within books.</p>
     </div>
   </div>
-
-  <Blob blur="120px" color="#FB3706" size="50vw" animated class="-left-1/9 top-2/3" />
 </template>
 
 <script setup lang="ts">
@@ -63,21 +53,23 @@ useTitleMotion([line1, line2], height)
 <style lang="scss" scoped>
 .view {
   position: relative;
-  border-bottom: 1px solid var(--color-text);
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  font-family: 'Raleway', sans-serif;
+  justify-content: center;
   font-weight: 900;
 }
 .title {
+  padding-bottom: 10vh;
   div {
     font-weight: 900;
     text-transform: uppercase;
     font-size: clamp(3rem, 5.6vw, 10vw);
     line-height: clamp(3rem, 5.6vw, 10vw);
+    font-family: 'Raleway', sans-serif;
+    // -webkit-text-stroke: 3px var(--color-text);
+    // color: transparent;
 
     &.line-holder {
       height: clamp(3rem, 5.6vw, 10vw);
