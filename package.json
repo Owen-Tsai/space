@@ -17,11 +17,12 @@
     "@nuxt/image": "^1.8.1",
     "@nuxtjs/mdc": "^0.9.2",
     "@vueuse/motion": "^2.2.6",
+    "custom-vue-scrollbar": "^0.0.8",
     "gsap": "^3.12.5",
     "gsap-trial": "^3.12.5",
     "nuxt": "^3.13.2",
     "nuxt-svgo": "^4.0.6",
-    "vue": "latest",
+    "vue": "^3.5.12",
     "vue-router": "latest"
   },
   "devDependencies": {

@@ -6,5 +6,5 @@
   "printWidth": 100,
   "trailingComma": "none",
   "endOfLine": "crlf",
-  "htmlWhitespaceSensitivity": "ignore"
+  "htmlWhitespaceSensitivity": "strict"
 }

@@ -5,17 +5,26 @@ body {
   font-family: 'font';
   padding: 0;
   margin: 0;
-  background:
-    url('~/assets/img/noise.svg') center no-repeat,
-    var(--color-bg);
-  background-size: cover;
-  height: 100vh;
+  background: var(--color-bg);
   width: 100vw;
   color: var(--color-text);
   ::selection {
     background-color: var(--color-red);
   }
-  overflow: hidden;
+  overflow-x: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: url('~/assets/img/noise.svg') center no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+  }
 }
 
 #__nuxt {
@@ -25,4 +34,14 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s ease-in-out;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
 }

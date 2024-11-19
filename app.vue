@@ -1,61 +1,32 @@
 <template>
-  <div class="page h-full w-full overflow-hidden relative">
-    <div class="nav flex items-center justify-between z-10 relative">
-      <NuxtLink class="link" to="/">Home</NuxtLink>
-      <NuxtLink class="link" to="/projects">Projects</NuxtLink>
-      <NuxtLink class="link" to="/blog">Blog</NuxtLink>
-    </div>
+  <div class="page h-full">
+    <AppHeader />
+
     <NuxtPage />
 
     <Cursor />
 
-    <Blob blur="120px" color="#FB3706" size="50vw" animated class="-left-1/9 top-2/3" />
-    <Blob blur="1600px" color="#FB3706" size="120vh" class="-right-1/3 top-1/2 -translate-y-1/2" />
+    <Blob blur="120px" :color="blobColor" size="50vw" animated class="-left-1/9 top-2/3" />
+    <Blob
+      blur="1600px"
+      :color="blobColor"
+      size="120vh"
+      class="-right-1/3 top-1/2 -translate-y-1/2 -z-1"
+    />
 
-    <div class="footer flex items-center justify-between">
-      <div>&copy; {{ new Date().getFullYear() }}</div>
-      <div>
-        <ThemeSwitch />
-      </div>
-      <div></div>
-    </div>
+    <AppFooter class="footer" />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const isDark = useDark()
+
+const blobColor = computed(() => (!isDark.value ? '#fb3706' : '#114b77'))
+</script>
 
 <style lang="scss" scoped>
 .page {
   padding: clamp(2rem, 64px, 2vw);
-}
-.link {
-  color: var(--color-text);
-  text-decoration: none;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-size: clamp(1vw, 1rem, 1.5rem);
-}
-.nav {
-  .link {
-    &::after {
-      content: '';
-      display: block;
-      width: 0;
-      height: 2px;
-      background: var(--color-text);
-      transition: width 0.2s ease-out;
-    }
-    &.router-link-active {
-      &::after {
-        width: 100%;
-      }
-    }
-    &:hover {
-      &::after {
-        width: 100%;
-      }
-    }
-  }
 }
 :deep(html.dark) {
   .page {
@@ -63,9 +34,10 @@
   }
 }
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: clamp(2rem, 64px, 2vw);
-  width: 100%;
+  left: clamp(2rem, 64px, 2vw);
+  right: clamp(2rem, 64px, 2vw);
   border-bottom: 1px solid var(--color-text);
   overflow: hidden;
   z-index: 0;

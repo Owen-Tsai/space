@@ -1,10 +1,15 @@
 html {
-  --color-bg: #feedeb;
+  --color-bg: #ebfeeb;
   --color-text: #030712;
-  --color-red: #fb3706;
 }
 
 html.dark {
-  --color-bg: #030712;
+  // --color-bg: #89adab;
+  // --color-bg: #366361;
+  --color-bg: #0b0e18;
   --color-text: #f9fafb;
+
+  body::after {
+    filter: invert(0.6);
+  }
 }

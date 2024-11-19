@@ -31,15 +31,19 @@ onMounted(() => {
 onBeforeUnmount(() => {
   gsap.killTweensOf(blob.value)
 })
+
+watchEffect(() => {
+  console.log('watch effect invoked')
+  gsap.set(blob.value, { backgroundColor: color })
+})
 </script>
 
 <style lang="scss" scoped>
 .blob {
-  position: absolute;
+  position: fixed;
   width: v-bind(size);
   height: v-bind(size);
   overflow: hidden;
-  background-color: v-bind(color);
   border-radius: 50%;
   filter: blur(v-bind(blur));
 }

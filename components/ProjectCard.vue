@@ -1,10 +1,10 @@
 <template>
   <div class="card">
-    <div class="row">
-      <div>
-        <NuxtImg :src="image" />
+    <div class="row flex gap-8">
+      <div class="w-1/3">
+        <img :src="image" />
       </div>
-      <div>
+      <div class="w-2/3">
         <div>
           <h2>{{ title }}</h2>
           <p>{{ description }}</p>
@@ -32,6 +32,10 @@ const { image, description, title, tag } = defineProps<{
     .row {
       flex-direction: row-reverse;
     }
+  }
+
+  img {
+    width: 100%;
   }
 }
 </style>

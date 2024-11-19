@@ -53,7 +53,7 @@ useTitleMotion([line1, line2], height)
 <style lang="scss" scoped>
 .view {
   position: relative;
-  height: 100%;
+  height: calc(100vh - clamp(2rem, 64px, 2vw) * 2);
   width: 100%;
   display: flex;
   flex-direction: column;

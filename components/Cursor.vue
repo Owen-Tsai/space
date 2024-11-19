@@ -47,7 +47,7 @@ watch(
   () => {
     nextTick(() => {
       zoomCursor.reverse()
-      interactivables.value = document.querySelectorAll('a, button')
+      interactivables.value = document.querySelectorAll('a, button, [role="button"]')
       interactivables.value.forEach((el) => {
         el.addEventListener('mouseenter', () => {
           zoomCursor.play()
