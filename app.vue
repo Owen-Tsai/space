@@ -14,7 +14,7 @@
       class="-right-1/3 top-1/2 -translate-y-1/2 -z-1"
     />
 
-    <AppFooter class="footer" />
+    <AppFooter v-if="$route.path === '/'" class="footer" />
   </div>
 </template>
 
@@ -22,6 +22,7 @@
 const isDark = useDark()
 
 const blobColor = computed(() => (!isDark.value ? '#fb3706' : '#114b77'))
+// const blobColor = computed(() => (!isDark.value ? '#114b77' : '#114b77'))
 </script>
 
 <style lang="scss" scoped>

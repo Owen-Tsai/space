@@ -6,7 +6,7 @@
       </div>
       <div class="w-2/3">
         <div>
-          <h2>{{ title }}</h2>
+          <h2 class="my-0">{{ title }}</h2>
           <p>{{ description }}</p>
         </div>
         <div class="icon">
@@ -28,6 +28,8 @@ const { image, description, title, tag } = defineProps<{
 
 <style lang="scss" scoped>
 .card {
+  border: 2px solid var(--color-text);
+  padding: 0.5rem;
   &:nth-child(2n) {
     .row {
       flex-direction: row-reverse;
@@ -36,6 +38,8 @@ const { image, description, title, tag } = defineProps<{
 
   img {
     width: 100%;
+    display: block;
+    object-fit: cover;
   }
 }
 </style>

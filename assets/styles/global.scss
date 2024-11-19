@@ -14,16 +14,23 @@ body {
   overflow-x: hidden;
   position: relative;
 
-  &::after {
+  &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    background: url('~/assets/img/noise.svg') center no-repeat;
+    background: url('~/assets/img/noise.svg') center repeat;
     background-size: cover;
     background-attachment: fixed;
+    opacity: 0.8;
+  }
+}
+
+html.dark {
+  body::before {
+    filter: invert(0.8);
   }
 }
 

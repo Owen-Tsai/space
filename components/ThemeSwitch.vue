@@ -8,8 +8,9 @@
   >
     <div class="-mr-1px" ref="el">
       <div>{{ isDark ? 'N' : 'L' }}</div>
-      <div>{{ isDark ? 'L' : 'N' }}</div></div
-    ><span>IGHT</span>
+      <div>{{ isDark ? 'L' : 'N' }}</div>
+    </div>
+    <span>IGHT</span>
   </div>
 </template>
 

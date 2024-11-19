@@ -1,5 +1,6 @@
 html {
-  --color-bg: #ebfeeb;
+  // --color-bg: #ebfeeb;
+  --color-bg: #FEEDEB;
   --color-text: #030712;
 }
 
@@ -8,8 +9,4 @@ html.dark {
   // --color-bg: #366361;
   --color-bg: #0b0e18;
   --color-text: #f9fafb;
-
-  body::after {
-    filter: invert(0.6);
-  }
 }
