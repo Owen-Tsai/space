@@ -7,6 +7,7 @@ body {
   margin: 0;
   background: var(--color-bg);
   width: 100vw;
+  min-height: 100vh;
   color: var(--color-text);
   ::selection {
     background-color: var(--color-red);
@@ -25,6 +26,7 @@ body {
     background-size: cover;
     background-attachment: fixed;
     opacity: 0.8;
+    z-index: -1;
   }
 }
 

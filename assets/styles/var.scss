@@ -1,7 +1,8 @@
 html {
   // --color-bg: #ebfeeb;
-  --color-bg: #FEEDEB;
+  --color-bg: #feedeb;
   --color-text: #030712;
+  --color-text-invert: #f9fafb;
 }
 
 html.dark {
@@ -9,4 +10,5 @@ html.dark {
   // --color-bg: #366361;
   --color-bg: #0b0e18;
   --color-text: #f9fafb;
+  --color-text-invert: #030712;
 }

@@ -6,9 +6,9 @@
     @mouseenter="tween.play()"
     @mouseleave="tween.reverse()"
   >
-    <div class="-mr-1px" ref="el">
-      <div>{{ isDark ? 'N' : 'L' }}</div>
-      <div>{{ isDark ? 'L' : 'N' }}</div>
+    <div ref="el">
+      <div class="text-right">{{ isDark ? 'N' : 'L' }}</div>
+      <div class="text-right">{{ isDark ? 'L' : 'N' }}</div>
     </div>
     <span>IGHT</span>
   </div>

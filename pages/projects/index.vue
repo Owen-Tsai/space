@@ -3,7 +3,9 @@
     <div class="header h-90vh">
       <div class="pt-20vh text-center">
         <span class="title">projects</span>
-        <Filter :options="filterOpts" />
+        <div class="flex items-center justify-center mt-2rem">
+          <Filter v-model:value="activeFilter" :options="filterOpts" />
+        </div>
       </div>
     </div>
   </div>
@@ -13,6 +15,8 @@
 import { gsap } from 'gsap'
 import { TextPlugin } from 'gsap/TextPlugin'
 import cover from '~/assets/img/project-ywr.png'
+
+const activeFilter = ref(-1)
 
 const filterOpts = [
   { label: 'ALL', value: -1 },
