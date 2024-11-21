@@ -1,38 +1,24 @@
 <template>
-  <div class="relative">
-    <div class="title mt-8vh mb-6vh">
-      BLOG
-      <span ref="loader" class="loader">\</span>
-    </div>
-    <div class="list">
-      <div class="flex items-center justify-between gap-2vw"></div>
+  <div>
+    <div class="header h-90vh">
+      <div class="pt-20vh text-center">
+        <span class="title">blog</span>
+        <div class="flex items-center justify-center mt-2rem">
+          <Filter v-model:value="activeFilter" :options="filterOpts" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { gsap } from 'gsap'
-import { TextPlugin } from 'gsap/TextPlugin'
+const activeFilter = ref(-1)
 
-gsap.registerPlugin(TextPlugin)
-
-const loader = useTemplateRef('loader')
-const tl = gsap.timeline({ defaults: { value: '|', speed: 2 } })
-
-onMounted(() => {
-  tl.add('start')
-    .to(loader.value, { text: { value: '|', speed: 20 } })
-    .to(loader.value, { text: { value: '/', speed: 20 } })
-    .to(loader.value, { text: { value: '—', speed: 20 } })
-    .to(loader.value, { text: { value: '\\', speed: 20 } })
-    .add('end')
-
-  tl.repeat(-1)
-})
-
-onBeforeUnmount(() => {
-  tl.kill()
-})
+const filterOpts = [
+  { label: 'ALL', value: -1 },
+  { label: 'WEB', value: 'web' },
+  { label: 'DESIGN', value: 'design' }
+]
 </script>
 
 <style lang="scss" scoped>

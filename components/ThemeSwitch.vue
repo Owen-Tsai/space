@@ -10,7 +10,7 @@
       <div class="text-right">{{ isDark ? 'N' : 'L' }}</div>
       <div class="text-right">{{ isDark ? 'L' : 'N' }}</div>
     </div>
-    <span>IGHT</span>
+    <span ref="ref">IGHT</span>
   </div>
 </template>
 
@@ -19,18 +19,20 @@ import { useDark, useToggle } from '@vueuse/core'
 import gsap from 'gsap'
 
 const el = useTemplateRef('el')
+const ref = useTemplateRef('ref')
 
 const isDark = useDark({
   selector: 'html'
 })
 
 const toggleDark = useToggle(isDark)
+const { height } = useElementSize(ref)
 
 let tween: gsap.core.Tween
 
 onMounted(() => {
   tween = gsap.to(el.value, {
-    y: -16,
+    y: -height.value,
     duration: 0.5,
     paused: true,
     ease: 'power1.inOut'
