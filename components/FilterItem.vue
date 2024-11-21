@@ -1,9 +1,10 @@
 <template>
   <div
     ref="parent"
-    class="relative overflow-hidden"
+    class="item relative overflow-hidden"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
+    @mousemove="onMouseMove"
   >
     <div ref="el" class="spotlight"></div>
     <span>{{ label }}</span>
@@ -22,8 +23,12 @@ const el = useTemplateRef('el')
 
 const { elementX, elementY, isOutside } = useMouseInElement(parent)
 let tween: gsap.core.Tween
+const updateCursor = () => {
+  gsap.to(el.value, { x: elementX.value, y: elementY.value, duration: 0, ease: 'none' })
+}
 
 const onMouseEnter = () => {
+  gsap.to(el.value, { x: elementX.value, y: elementY.value, duration: 0 })
   tween.play()
 }
 
@@ -31,24 +36,36 @@ const onMouseLeave = () => {
   tween.reverse()
 }
 
+const onMouseMove = (e: MouseEvent) => {
+  updateCursor()
+}
+
 onMounted(() => {
-  tween = gsap.to(el.value, { top: elementX.value, left: elementY.value, scale: 30, paused: true })
+  gsap.set(el.value, { xPercent: -50, yPercent: -50 })
+
+  tween = gsap.to(el.value, { scale: 20, paused: true, duration: 0.3, ease: 'power1.inOut' })
 })
 
 onBeforeUnmount(() => {
-  tween.kill()
+  gsap.killTweensOf(el.value)
 })
 </script>
 
 <style lang="scss" scoped>
 .spotlight {
   position: absolute;
-  background-color: red;
+  background-color: var(--color-text);
   border-radius: 50%;
   height: 10px;
   width: 10px;
-  top: 0;
-  left: 0;
   transform: scale(0);
+  z-index: -1;
+}
+.item {
+  color: var(--color-text);
+  transition: color 0.3s;
+  &:hover {
+    color: var(--color-text-invert);
+  }
 }
 </style>
